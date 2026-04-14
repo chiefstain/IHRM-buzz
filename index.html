@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Reflection & Q&A Platform — AI & HR</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--bg:#0B0E1A;--card:#141B2D;--card2:#1A2235;--coral:#F97066;--mint:#10B981;--amber:#F59E0B;--sky:#38BDF8;--gold:#EAB308;--purple:#A78BFA;--tx:#CBD5E1;--dim:#64748B;--wh:#fff;--slate:#1E293B;--border:#334155}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+.container{max-width:900px;margin:0 auto;padding:16px}
+.hidden{display:none!important}
+button{font-family:inherit;cursor:pointer;border:none;transition:all .2s;font-weight:600}
+button:hover{transform:translateY(-1px)}
+button:active{transform:translateY(0)}
+input,textarea,select{font-family:inherit;background:var(--slate);border:1.5px solid var(--border);border-radius:12px;padding:12px 16px;color:var(--wh);font-size:14px;width:100%;outline:none;transition:border-color .2s}
+input:focus,textarea:focus{border-color:var(--sky)}
+textarea{resize:vertical;min-height:100px}
+.btn{border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;letter-spacing:.3px}
+.btn-coral{background:linear-gradient(135deg,#F97066,#E54D42);color:#fff}
+.btn-mint{background:linear-gradient(135deg,#10B981,#059669);color:#fff}
+.btn-sky{background:linear-gradient(135deg,#38BDF8,#0EA5E9);color:#fff}
+.btn-amber{background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--tx);border:1px solid var(--border)}
+.btn-sm{padding:8px 16px;font-size:12px;border-radius:10px}
+.btn-full{width:100%}
+.card{background:var(--card);border-radius:16px;padding:24px;border:1px solid rgba(255,255,255,.06)}
+.card2{background:var(--card2);border-radius:14px;padding:20px;border:1px solid rgba(255,255,255,.04)}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.tag-coral{background:rgba(249,112,102,.15);color:var(--coral)}
+.tag-mint{background:rgba(16,185,129,.15);color:var(--mint)}
+.tag-sky{background:rgba(56,189,248,.15);color:var(--sky)}
+.tag-amber{background:rgba(245,158,11,.15);color:var(--amber)}
+.tag-purple{background:rgba(167,139,250,.15);color:var(--purple)}
+.header{text-align:center;padding:24px 0 16px}
+.header h1{font-size:28px;font-weight:900;color:var(--wh);margin-bottom:4px}
+.header p{color:var(--dim);font-size:13px}
+.group-colors{display:flex;gap:8px;justify-content:center;margin:12px 0}
+.gc{width:10px;height:10px;border-radius:50%}
+.tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:8px 16px;border-radius:10px;font-size:12px;font-weight:600;background:rgba(255,255,255,.04);color:var(--dim);border:1px solid transparent;cursor:pointer}
+.tab.active{background:rgba(56,189,248,.1);color:var(--sky);border-color:rgba(56,189,248,.3)}
+.progress-ring{display:flex;gap:3px;margin:8px 0}
+.progress-ring .dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:var(--slate);color:var(--dim)}
+.progress-ring .dot.done{background:var(--mint);color:#fff}
+.progress-ring .dot.current{background:var(--sky);color:#fff}
+.score-bar{height:6px;border-radius:3px;background:var(--slate);overflow:hidden;margin:6px 0}
+.score-fill{height:100%;border-radius:3px;transition:width .5s}
+.member-list{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.member-chip{background:var(--slate);padding:4px 12px;border-radius:20px;font-size:12px;color:var(--tx)}
+.timer-badge{background:rgba(249,112,102,.15);color:var(--coral);padding:4px 12px;border-radius:20px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+.mcq-option{display:block;width:100%;text-align:left;padding:14px 18px;border-radius:12px;background:var(--slate);color:var(--tx);font-size:14px;margin-bottom:8px;border:2px solid transparent;cursor:pointer;transition:all .2s}
+.mcq-option:hover{border-color:var(--sky);background:rgba(56,189,248,.08)}
+.mcq-option.selected{border-color:var(--sky);background:rgba(56,189,248,.12);color:var(--wh)}
+.mcq-option.correct{border-color:var(--mint);background:rgba(16,185,129,.12);color:var(--mint)}
+.mcq-option.wrong{border-color:var(--coral);background:rgba(249,112,102,.12);color:var(--coral)}
+.marks-input{width:60px;text-align:center;padding:8px;font-size:18px;font-weight:700;border-radius:10px}
+.admin-toggle{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--card2);border-radius:12px;margin-bottom:8px}
+.toggle{width:44px;height:24px;border-radius:12px;background:var(--slate);position:relative;cursor:pointer;transition:background .3s}
+.toggle.on{background:var(--mint)}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .3s}
+.toggle.on::after{transform:translateX(20px)}
+.scoreboard-row{display:grid;grid-template-columns:40px 1fr 80px 80px 80px;gap:8px;padding:10px 12px;border-radius:10px;align-items:center}
+.fade-in{animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.qr-container{background:var(--wh);border-radius:16px;padding:16px;display:inline-block;margin:12px auto;box-shadow:0 0 30px rgba(56,189,248,.15)}
+.qr-container canvas,.qr-container img{border-radius:8px!important}
+.qr-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin:16px 0}
+.url-display{background:var(--slate);border:1px solid var(--border);border-radius:10px;padding:10px 18px;font-size:13px;color:var(--sky);font-weight:600;letter-spacing:.5px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;transition:all .2s}
+.url-display:hover{border-color:var(--sky);background:rgba(56,189,248,.08)}
+@media(max-width:600px){.container{padding:10px}.card{padding:16px}.header h1{font-size:22px}.scoreboard-row{grid-template-columns:30px 1fr 60px 60px 60px;font-size:12px}}
+</style>
+</head>
+<body>
+
+<div class="container" id="app">
+  <div class="header">
+    <div style="font-size:36px;margin-bottom:4px">🎯</div>
+    <h1>Reflection & Q&A Platform</h1>
+    <p>AI & HR Professional Development</p>
+    <div style="margin-top:8px;font-size:11px;color:var(--dim)">Prepared by <strong style="color:var(--sky)">Danstan Akwiri</strong> · <a href="https://www.linkedin.com/in/danstanakwiri/" target="_blank" style="color:var(--sky);text-decoration:none">LinkedIn</a></div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="tabs" id="nav-tabs"></div>
+
+  <!-- SCREENS (injected by JS) -->
+  <div id="screen-area"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA: Questions, MCQs, State
+// ═══════════════════════════════════════════════
+
+const TOPICS = [
+  "Overview of AI Tools for HR & Management",
+  "Data-Driven Decision Making in Practice",
+  "Hands-on Session: Applying AI Tools in HR",
+  "Human-Centered Leadership in the Age of AI"
+];
+
+const OPEN_QUESTIONS = [
+  // Topic 1: AI Tools for HR
+  {topic:0,q:"Identify 3 AI tools that could transform recruitment in your organization and explain how you would implement one of them within 90 days.",level:"Application"},
+  {topic:0,q:"Your CEO asks: 'Why should we invest in AI for HR when we already have an HRIS?' Draft a 2-minute business case with specific ROI data.",level:"Synthesis"},
+  {topic:0,q:"A department head says AI-powered performance monitoring will 'keep employees accountable.' What ethical concerns would you raise and how would you propose an alternative approach?",level:"Evaluation"},
+  {topic:0,q:"Map the AI tools ecosystem for your organization: which of the 7 HR categories should be your priority and why? What tool would you pilot first?",level:"Analysis"},
+  {topic:0,q:"An AI recruitment tool screens out 80% of applicants. A hiring manager complains about missing 'good candidates.' How would you investigate and respond?",level:"Problem-Solving"},
+  {topic:0,q:"Compare the strengths and limitations of generative AI (ChatGPT/Claude) versus specialist HR AI tools (Eightfold/Visier). When would you use each?",level:"Analysis"},
+  // Topic 2: Data-Driven Decision Making
+  {topic:1,q:"A senior leader says 'I've been in this industry for 20 years — I don't need data to make hiring decisions.' How would you respectfully make the case for data-driven approaches?",level:"Application"},
+  {topic:1,q:"Your attrition rate is 22%. Using the DDDM framework (Define→Collect→Analyse→Decide→Review), outline how you would investigate and address this.",level:"Application"},
+  {topic:1,q:"You have data showing that remote workers are 12% more productive but 15% less collaborative. The CEO wants everyone back in office. What do you recommend and why?",level:"Synthesis"},
+  {topic:1,q:"Identify 3 cognitive biases that could affect a promotion decision and explain how data can correct each one. Give a specific HR example for each.",level:"Analysis"},
+  {topic:1,q:"You discover that your AI analytics tool's attrition predictions are 87% accurate overall but only 62% accurate for employees under 25. What do you do?",level:"Evaluation"},
+  {topic:1,q:"Design a 'data dashboard' for a Head of HR: what 5 metrics would you include, why, and how often should each be updated?",level:"Synthesis"},
+  // Topic 3: Hands-on AI in HR
+  {topic:2,q:"Simulate this scenario: You need to draft a job description using AI, then audit it for bias. Walk through the exact steps, prompts, and checks you would perform.",level:"Application"},
+  {topic:2,q:"A manager asks you to use AI to identify which team members are 'flight risks.' Design the workflow: what data, what tool, what safeguards, what human oversight?",level:"Synthesis"},
+  {topic:2,q:"Your company deployed an AI chatbot for employee queries. After 3 months, 40% of employees say they prefer talking to a human. What went wrong and how do you fix it?",level:"Problem-Solving"},
+  {topic:2,q:"Create a practical plan: How would you use AI to personalise learning pathways for 500 employees with different roles, skill levels, and career goals?",level:"Application"},
+  {topic:2,q:"You're asked to build a business case for implementing Visier (workforce analytics). What specific outcomes would you promise, and how would you measure success at 6 months?",level:"Synthesis"},
+  {topic:2,q:"An AI tool recommends terminating an employee contract based on performance data. The employee's manager disagrees strongly. Facilitate this decision using the HEAR framework.",level:"Problem-Solving"},
+  // Topic 4: Human-Centered Leadership
+  {topic:3,q:"Using the 5-Pillar Model (Empathy, Ethics, Clarity, Growth Mindset, Trust), rate your own leadership on a 1-5 scale for each pillar and identify your top growth area with a specific action plan.",level:"Self-Assessment"},
+  {topic:3,q:"'AI doesn't create culture — it amplifies it.' Give a real or hypothetical example of AI amplifying a healthy culture AND a toxic culture. What should leaders do differently in each case?",level:"Analysis"},
+  {topic:3,q:"Satya Nadella transformed Microsoft from a 'know-it-all' to a 'learn-it-all' culture. What specific leadership actions from this case study could you apply in your own organization?",level:"Application"},
+  {topic:3,q:"The 'leadership atrophy' risk: As AI handles more tasks, leaders may stop practising human judgment. Design 3 concrete practices that prevent this atrophy in your team.",level:"Synthesis"},
+  {topic:3,q:"48% of employees would leave a role with 'emotionally unavailable' leadership. With AI handling more routine interactions, how do you ensure your leadership remains emotionally present?",level:"Evaluation"},
+  {topic:3,q:"M-Kopa in Kenya uses AI for credit scoring but maintains human agents for relationship-based support. What leadership principles from this case apply to YOUR industry?",level:"Application"},
+];
+
+const MCQ_BANK = [
+  // Topic 1
+  {topic:0,q:"What percentage of HR functions now use AI tools according to SHRM 2026?",opts:["26%","43%","67%","81%"],correct:1},
+  {topic:0,q:"Which AI tool uses deep learning on 1.6B+ career profiles for talent matching?",opts:["HireVue","Greenhouse","Eightfold.ai","SeekOut"],correct:2},
+  {topic:0,q:"What does the 'T' stand for in the FITS Framework for AI tool selection?",opts:["Timely","Transparent","Technical","Tested"],correct:1},
+  {topic:0,q:"Which company acquired Paradox (conversational AI) in 2025?",opts:["SAP","Oracle","Workday","Microsoft"],correct:2},
+  {topic:0,q:"AI-powered hiring tools can improve workforce diversity by approximately:",opts:["10%","20%","35%","50%"],correct:2},
+  // Topic 2
+  {topic:1,q:"According to the DDDM framework, what is the most neglected step?",opts:["Define","Collect","Analyse","Review"],correct:3},
+  {topic:1,q:"What percentage of decisions in organisations are based on intuition rather than evidence?",opts:["28%","42%","58%","73%"],correct:2},
+  {topic:1,q:"Predictive AI can forecast employee turnover with what accuracy?",opts:["65%","72%","87%","95%"],correct:2},
+  {topic:1,q:"Which cognitive bias involves over-weighting the first piece of information received?",opts:["Confirmation Bias","Anchoring Bias","Recency Bias","Survivorship Bias"],correct:1},
+  {topic:1,q:"The average cost of a bad senior hiring decision is approximately:",opts:["$50K","$100K","$250K","$500K"],correct:2},
+  // Topic 3
+  {topic:2,q:"What is 'agentic AI' in the context of HR recruitment?",opts:["AI that replaces recruiters entirely","AI that reasons, plans and acts autonomously on tasks","AI limited to answering FAQs","AI that only works with structured data"],correct:1},
+  {topic:2,q:"When deploying AI for employee performance monitoring, what should always be maintained?",opts:["Full automation","Human override capability","Anonymous data only","Monthly reporting only"],correct:1},
+  {topic:2,q:"The EU AI Act classifies AI hiring tools as:",opts:["Low-risk","Medium-risk","High-risk","Prohibited"],correct:2},
+  {topic:2,q:"What does the 'H' in the HEAR Framework stand for?",opts:["Holistic approach","Human oversight","Hiring accuracy","Historical data"],correct:1},
+  {topic:2,q:"AI-based skill matching can predict job performance with what accuracy?",opts:["55%","67%","78%","92%"],correct:2},
+  // Topic 4
+  {topic:3,q:"According to research, what percentage of top-performing leaders have high emotional intelligence?",opts:["60%","75%","85%","90%"],correct:3},
+  {topic:3,q:"What did Satya Nadella replace Microsoft's 'know-it-all' culture with?",opts:["Performance culture","Learn-it-all culture","Innovation culture","Data culture"],correct:1},
+  {topic:3,q:"The 'leadership atrophy' risk refers to:",opts:["Leaders being replaced by AI","Leaders losing human judgment skills from over-relying on AI","Leaders refusing to adopt AI","Leaders spending too much on AI tools"],correct:1},
+  {topic:3,q:"What percentage of employees would leave a role with 'emotionally unavailable' leadership?",opts:["25%","34%","48%","62%"],correct:2},
+  {topic:3,q:"According to the 5-Pillar Model, which is NOT one of the pillars?",opts:["Empathy","Efficiency","Clarity","Trust Building"],correct:1},
+];
+
+// ═══ INDIVIDUAL MCQ BANK (separate pool) ═══
+const INDIVIDUAL_MCQ = [
+  {topic:0,q:"What is the primary purpose of SeekOut as an AI HR tool?",opts:["Performance reviews","Talent sourcing & diversity hiring","Payroll automation","Learning management"],correct:1},
+  {topic:0,q:"Phenom's X+ Agents represent which type of AI?",opts:["Narrow AI","Generative AI","Agentic AI","Symbolic AI"],correct:2},
+  {topic:0,q:"How much can AI reduce recruitment costs according to research?",opts:["10%","20%","30%","50%"],correct:2},
+  {topic:0,q:"Which platform was acquired by Workday for $1.1 billion for AI-powered learning?",opts:["Degreed","Coursera","Sana","Udemy"],correct:2},
+  {topic:0,q:"What does 'FITS' stand for in the AI tool selection framework?",opts:["Fast, Intelligent, Tested, Scalable","Fit, Integrate, Transparent, Secure","Flexible, Innovative, Targeted, Strategic","Functional, Interoperable, Trusted, Safe"],correct:1},
+  {topic:1,q:"In the DDDM framework, what comes after 'Collect'?",opts:["Define","Analyse","Decide","Review"],correct:1},
+  {topic:1,q:"What is 'noise' in decision-making according to Kahneman?",opts:["Too much data","Unwanted variability in judgments","Background distractions","Irrelevant information"],correct:1},
+  {topic:1,q:"Survivorship bias in HR means:",opts:["Only studying why employees survive layoffs","Focusing on successful hires while ignoring failed ones","Keeping the longest-serving employees","Using survival analysis for attrition"],correct:1},
+  {topic:1,q:"A well-structured spreadsheet is better than expensive software when:",opts:["Always","Never","When you have the right questions","When you have more than 1000 employees"],correct:2},
+  {topic:1,q:"What ROI do companies using data analytics typically see compared to those that don't?",opts:["2x","5x","10x","20x"],correct:2},
+  {topic:2,q:"What should always happen before deploying AI for HR decisions?",opts:["Full automation testing","Bias audit and employee notification","Board approval only","IT department review only"],correct:1},
+  {topic:2,q:"NYC Local Law 144 requires what for AI hiring tools?",opts:["Complete ban on AI","Annual independent bias audits","Government approval per hire","Mandatory AI training for all staff"],correct:1},
+  {topic:2,q:"The HEAR framework's 'Review Loop' ensures:",opts:["Annual performance reviews","Tracking if AI and human decisions were correct over time","Regular software updates","Employee satisfaction surveys"],correct:1},
+  {topic:2,q:"When an AI chatbot has 40% dissatisfaction rate, the most likely issue is:",opts:["Poor internet connection","Lack of human escalation paths","Outdated software","Too many features"],correct:1},
+  {topic:2,q:"Guided AI workflows can increase accuracy by up to:",opts:["10%","25%","40%","60%"],correct:2},
+  {topic:3,q:"What does 'leadership atrophy' mean in the AI context?",opts:["Leaders getting tired of AI","Leaders losing judgment skills from over-relying on AI systems","AI replacing all leaders","Leaders refusing technology"],correct:1},
+  {topic:3,q:"Microsoft's market cap grew from $300B to what under Nadella's human-centered leadership?",opts:["$800B","$1.5T","$2.4T","$3.4T"],correct:3},
+  {topic:3,q:"The EY AAA Framework stands for:",opts:["Assess, Align, Act","Augment, Adapt, Account","Automate, Analyse, Apply","Attract, Advance, Achieve"],correct:1},
+  {topic:3,q:"M-Kopa in Kenya uses AI for credit scoring but maintains human agents because:",opts:["AI is too expensive","Context like illness explains data patterns AI can't understand","Regulations require it","Customers prefer humans for all interactions"],correct:1},
+  {topic:3,q:"'AI is a cultural mirror' means:",opts:["AI creates new cultures","AI reflects and amplifies existing organizational culture","AI only works in certain cultures","AI replaces cultural values"],correct:1},
+];
+
+// ═══ STATE ═══
+let STATE = {
+  admin: { password:"admin2026", loggedIn:false, features:{ registration:true, openQuestions:true, peerMarking:true, mcq:true, individualQuiz:true, scoreboard:true } },
+  groups: {}, // { "Group A": { members:[], color:"coral" } }
+  currentView: "home",
+  sessionActive: false,
+  assignments: {}, // { "Group A": { open:[...], mcq:[...], markGroup:"Group B" } }
+  answers: {}, // { "Group A": { open:[...], mcq:[...] } }
+  individuals: {}, // { "Alice": { mcqIdxs:[...], mcq:[{qIdx,selected,correct}], done:false } }
+};
+
+function save(){localStorage.setItem("rqa_state",JSON.stringify(STATE))}
+function load(){try{const s=JSON.parse(localStorage.getItem("rqa_state"));if(s)STATE=s;}catch{}}
+load();
+
+const GRP_COLORS = {coral:"var(--coral)",mint:"var(--mint)",amber:"var(--amber)"};
+const GRP_NAMES = ["Group Alpha","Group Beta","Group Gamma"];
+const GRP_TAGS = ["tag-coral","tag-mint","tag-amber"];
+const GRP_KEYS = ["coral","mint","amber"];
+
+// ═══ UTILITY ═══
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function assignQuestions(){
+  const groups=Object.keys(STATE.groups);
+  if(groups.length<3)return;
+  const usedOpen=new Set();
+  const usedMcq=new Set();
+  STATE.assignments={};
+  STATE.answers={};
+  // Peer marking rotation: A marks B, B marks C, C marks A
+  const markMap={[groups[0]]:groups[1],[groups[1]]:groups[2],[groups[2]]:groups[0]};
+  
+  groups.forEach(g=>{
+    // 4 open questions — one per topic, random, unique across groups
+    const openQs=[];
+    for(let t=0;t<4;t++){
+      const pool=OPEN_QUESTIONS.map((q,i)=>({...q,idx:i})).filter(q=>q.topic===t&&!usedOpen.has(q.idx));
+      if(pool.length>0){const pick=pool[Math.floor(Math.random()*pool.length)];openQs.push(pick.idx);usedOpen.add(pick.idx);}
+    }
+    // 10 MCQs — random, unique across groups
+    const mcqPool=MCQ_BANK.map((q,i)=>({...q,idx:i})).filter(q=>!usedMcq.has(q.idx));
+    const mcqPick=shuffle(mcqPool).slice(0,10);
+    const mcqIdxs=mcqPick.map(m=>{usedMcq.add(m.idx);return m.idx;});
+    
+    STATE.assignments[g]={open:openQs,mcq:mcqIdxs,markGroup:markMap[g]};
+    STATE.answers[g]={open:openQs.map(idx=>({qIdx:idx,answer:"",submitted:false,markedBy:"",score:null})),mcq:mcqIdxs.map(idx=>({qIdx:idx,selected:null,correct:MCQ_BANK[idx].correct})),mcqDone:false,openDone:false,currentOpenIdx:0};
+  });
+  STATE.sessionActive=true;
+  save();
+}
+
+// ═══ RENDER ENGINE ═══
+const $=id=>document.getElementById(id);
+const app=$("app");
+
+function render(){
+  // Nav tabs
+  const navEl=$("nav-tabs");
+  const tabs=[{id:"home",label:"🏠 Home"},{id:"register",label:"📝 Register"},{id:"play",label:"🎮 Play"},{id:"scoreboard",label:"🏆 Scoreboard"},{id:"admin",label:"⚙️ Admin"}];
+  navEl.innerHTML=tabs.map(t=>`<div class="tab ${STATE.currentView===t.id?'active':''}" onclick="navigate('${t.id}')">${t.label}</div>`).join("");
+  
+  const area=$("screen-area");
+  area.innerHTML="";
+  
+  switch(STATE.currentView){
+    case "home": renderHome(area);break;
+    case "register": renderRegister(area);break;
+    case "play": renderPlay(area);break;
+    case "scoreboard": renderScoreboard(area);break;
+    case "admin": renderAdmin(area);break;
+  }
+}
+
+function navigate(view){STATE.currentView=view;render();}
+
+// ═══ HOME ═══
+function renderHome(el){
+  const groups=Object.keys(STATE.groups);
+  const siteUrl=window.location.href.split('?')[0].split('#')[0];
+  el.innerHTML=`
+    <div class="card fade-in" style="text-align:center;margin-bottom:16px">
+      <h2 style="color:var(--wh);font-size:20px;margin-bottom:8px">Welcome to the Reflection & Q&A Session</h2>
+      <p style="font-size:13px;color:var(--dim);margin-bottom:16px">4 Topics · 3 Groups · Open Questions + Peer Marking + MCQs</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px">
+        ${TOPICS.map((t,i)=>`<span class="badge ${['tag-coral','tag-mint','tag-sky','tag-amber'][i]}">${t.split(':')[0]}</span>`).join("")}
+      </div>
+      
+      <!-- QR CODE SECTION -->
+      <div class="qr-wrap">
+        <p style="font-size:12px;color:var(--dim);margin-bottom:2px">📱 Scan to join on your phone</p>
+        <div class="qr-container" id="qr-code-home"></div>
+        <div class="url-display" onclick="copyUrl()" id="url-display-btn" title="Click to copy">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+          <span id="url-text">${siteUrl.replace('https://','').replace('http://','')}</span>
+        </div>
+      </div>
+      
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px">
+        ${groups.length<3?`<button class="btn btn-sky" onclick="navigate('register')">Register Groups</button>`:""}
+        ${groups.length===3&&!STATE.sessionActive?`<button class="btn btn-coral" onclick="navigate('admin')">Start Session (Admin)</button>`:""}
+        ${STATE.sessionActive?`<button class="btn btn-mint" onclick="navigate('play')">Enter Session</button>`:""}
+        <button class="btn btn-ghost" onclick="navigate('scoreboard')">View Scoreboard</button>
+        ${STATE.admin.features.individualQuiz?`<button class="btn btn-ghost" onclick="navigate('individual')" style="border-color:var(--purple);color:var(--purple)">👤 Individual Quiz</button>`:""}
+      </div>
+    </div>
+    ${groups.length>0?`
+    <div class="card fade-in">
+      <h3 style="color:var(--wh);font-size:16px;margin-bottom:12px">Registered Groups</h3>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${groups.map((g,i)=>{
+          const grp=STATE.groups[g];
+          return `<div class="card2" style="border-left:3px solid ${GRP_COLORS[grp.color]}">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong style="color:var(--wh)">${g}</strong>
+              <span class="badge ${GRP_TAGS[i]}">${grp.members.length} members</span>
+            </div>
+            <div class="member-list">${grp.members.map(m=>`<span class="member-chip">${m}</span>`).join("")}</div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>`:""}
+  `;
+  // Generate QR code after DOM is ready
+  setTimeout(()=>{
+    const qrEl=document.getElementById('qr-code-home');
+    if(qrEl&&qrEl.children.length===0){
+      try{
+        new QRCode(qrEl,{text:siteUrl,width:180,height:180,colorDark:"#0B0E1A",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});
+      }catch(e){
+        // Fallback: use a QR API image if library fails
+        qrEl.innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(siteUrl)}&color=0B0E1A&bgcolor=ffffff" alt="QR Code" width="180" height="180" style="border-radius:8px"/>`;
+      }
+    }
+  },100);
+}
+
+function copyUrl(){
+  const url=window.location.href.split('?')[0].split('#')[0];
+  navigator.clipboard.writeText(url).then(()=>{
+    const btn=document.getElementById('url-display-btn');
+    const orig=btn.innerHTML;
+    btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span style="color:#10B981">Copied!</span>';
+    setTimeout(()=>{btn.innerHTML=orig;},2000);
+  }).catch(()=>{
+    // Fallback for older browsers
+    const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    alert('URL copied: '+url);
+  });
+}
+
+// ═══ REGISTER ═══
+function renderRegister(el){
+  if(!STATE.admin.features.registration){el.innerHTML=`<div class="card" style="text-align:center"><p>Registration is currently disabled by admin.</p></div>`;return;}
+  const groups=Object.keys(STATE.groups);
+  el.innerHTML=`
+    <div class="card fade-in">
+      <h3 style="color:var(--wh);font-size:18px;margin-bottom:4px">Group Registration</h3>
+      <p style="font-size:12px;color:var(--dim);margin-bottom:16px">Register 3 groups. Add member names separated by commas.</p>
+      ${[0,1,2].map(i=>{
+        const existing=groups[i]?STATE.groups[groups[i]]:null;
+        return `<div class="card2" style="margin-bottom:12px;border-left:3px solid ${Object.values(GRP_COLORS)[i]}">
+          <label style="font-size:13px;font-weight:600;color:var(--wh);margin-bottom:6px;display:block">${GRP_NAMES[i]}</label>
+          <input id="reg-members-${i}" placeholder="Enter member names separated by commas (e.g. Alice, Bob, Carol)" value="${existing?existing.members.join(', '):''}" style="margin-bottom:8px"/>
+          <button class="btn btn-sm ${['btn-coral','btn-mint','btn-amber'][i]}" onclick="registerGroup(${i})">
+            ${existing?'Update':'Register'} ${GRP_NAMES[i]}
+          </button>
+        </div>`;
+      }).join("")}
+      ${groups.length===3?`<div style="text-align:center;margin-top:12px"><button class="btn btn-sky" onclick="navigate('admin')">All Groups Ready → Go to Admin</button></div>`:""}
+    </div>
+  `;
+}
+
+function registerGroup(idx){
+  const input=document.getElementById(`reg-members-${idx}`);
+  const members=input.value.split(',').map(m=>m.trim()).filter(m=>m.length>0);
+  if(members.length<1){alert("Please enter at least 1 member name.");return;}
+  STATE.groups[GRP_NAMES[idx]]={members,color:GRP_KEYS[idx]};
+  save();render();
+}
+
+// ═══ ADMIN ═══
+function renderAdmin(el){
+  if(!STATE.admin.loggedIn){
+    el.innerHTML=`
+      <div class="card fade-in" style="max-width:400px;margin:0 auto;text-align:center">
+        <h3 style="color:var(--wh);margin-bottom:12px">🔐 Admin Login</h3>
+        <input id="admin-pw" type="password" placeholder="Enter admin password" style="margin-bottom:12px"/>
+        <button class="btn btn-coral btn-full" onclick="adminLogin()">Login</button>
+        <p style="font-size:11px;color:var(--dim);margin-top:8px">Default password: admin2026</p>
+      </div>`;
+    return;
+  }
+  const groups=Object.keys(STATE.groups);
+  const feats=STATE.admin.features;
+  el.innerHTML=`
+    <div class="card fade-in">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="color:var(--wh);font-size:18px">⚙️ Admin Panel</h3>
+        <button class="btn btn-sm btn-ghost" onclick="adminLogout()">Logout</button>
+      </div>
+      
+      <h4 style="color:var(--dim);font-size:13px;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">Feature Controls</h4>
+      ${Object.entries(feats).map(([k,v])=>`
+        <div class="admin-toggle">
+          <div class="toggle ${v?'on':''}" onclick="toggleFeature('${k}')"></div>
+          <span style="font-size:13px;color:var(--tx)">${k.replace(/([A-Z])/g,' $1').replace(/^./,s=>s.toUpperCase())}</span>
+        </div>
+      `).join("")}
+      
+      <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+        ${groups.length===3&&!STATE.sessionActive?`<button class="btn btn-mint" onclick="startSession()">🚀 Start Session & Assign Questions</button>`:""}
+        ${STATE.sessionActive?`<button class="btn btn-amber" onclick="navigate('play')">📋 View Session</button>`:""}
+        <button class="btn btn-coral" onclick="resetAll()">🗑️ Reset Everything</button>
+        <button class="btn btn-ghost" onclick="navigate('scoreboard')">🏆 Scoreboard</button>
+      </div>
+      
+      ${STATE.sessionActive?`
+      <div style="margin-top:16px">
+        <h4 style="color:var(--dim);font-size:13px;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Question Assignments</h4>
+        ${groups.map((g,i)=>{
+          const a=STATE.assignments[g];
+          if(!a)return"";
+          return `<div class="card2" style="margin-bottom:8px;border-left:3px solid ${GRP_COLORS[STATE.groups[g].color]}">
+            <strong style="color:var(--wh)">${g}</strong>
+            <span style="color:var(--dim);font-size:12px"> → Peer-marked by: <strong style="color:var(--sky)">${a.markGroup}</strong></span>
+            <div style="font-size:11px;color:var(--dim);margin-top:4px">${a.open.length} open Qs · ${a.mcq.length} MCQs assigned</div>
+          </div>`;
+        }).join("")}
+      </div>`:""}
+    </div>
+  `;
+}
+
+function adminLogin(){const pw=document.getElementById("admin-pw").value;if(pw===STATE.admin.password){STATE.admin.loggedIn=true;save();render();}else{alert("Incorrect password.");}}
+function adminLogout(){STATE.admin.loggedIn=false;save();render();}
+function toggleFeature(key){STATE.admin.features[key]=!STATE.admin.features[key];save();render();}
+function startSession(){if(Object.keys(STATE.groups).length<3){alert("Register all 3 groups first.");return;}assignQuestions();render();}
+function resetAll(){if(!confirm("This will delete ALL data including groups, answers, and scores. Continue?"))return;localStorage.removeItem("rqa_state");STATE={admin:{password:"admin2026",loggedIn:true,features:{registration:true,openQuestions:true,peerMarking:true,mcq:true,individualQuiz:true,scoreboard:true}},groups:{},currentView:"admin",sessionActive:false,assignments:{},answers:{},individuals:{}};save();render();}
+
+// ═══ PLAY ═══
+function renderPlay(el){
+  if(!STATE.sessionActive){el.innerHTML=`<div class="card" style="text-align:center"><p>Session not started yet. Ask admin to start the session.</p><button class="btn btn-ghost" style="margin-top:12px" onclick="navigate('home')">Back to Home</button></div>`;return;}
+  
+  const groups=Object.keys(STATE.groups);
+  el.innerHTML=`
+    <div class="card fade-in">
+      <h3 style="color:var(--wh);font-size:18px;margin-bottom:12px">Select Your Group</h3>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${groups.map((g,i)=>`
+          <button class="btn btn-full ${['btn-coral','btn-mint','btn-amber'][i]}" onclick="enterGroup('${g}')" style="text-align:left;display:flex;justify-content:space-between;align-items:center;padding:16px 20px">
+            <span style="font-size:16px;font-weight:700">${g}</span>
+            <span style="font-size:12px;opacity:.8">${STATE.groups[g].members.length} members</span>
+          </button>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function enterGroup(groupName){
+  STATE._activeGroup=groupName;
+  STATE.currentView="group-hub";
+  render();
+}
+
+// ═══ GROUP HUB ═══
+function renderGroupHub(el,group){
+  const a=STATE.assignments[group];
+  const ans=STATE.answers[group];
+  const feats=STATE.admin.features;
+  const grp=STATE.groups[group];
+  const gi=Object.keys(STATE.groups).indexOf(group);
+  
+  // Calculate progress
+  const openAnswered=ans.open.filter(o=>o.submitted).length;
+  const mcqAnswered=ans.mcq.filter(m=>m.selected!==null).length;
+  
+  // Check if this group has peer marking to do
+  const markForGroup=Object.entries(STATE.assignments).find(([g,ass])=>ass.markGroup===group);
+  const hasMarking=markForGroup&&STATE.answers[markForGroup[0]]?.open.some(o=>o.submitted&&o.score===null);
+  
+  el.innerHTML=`
+    <div class="card fade-in">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div>
+          <h3 style="color:var(--wh);font-size:20px">${group}</h3>
+          <div class="member-list">${grp.members.map(m=>`<span class="member-chip">${m}</span>`).join("")}</div>
+        </div>
+        <button class="btn btn-sm btn-ghost" onclick="navigate('play')">← Back</button>
+      </div>
+      
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${feats.openQuestions?`
+        <div class="card2" style="border-left:3px solid var(--coral)">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <strong style="color:var(--wh)">📝 Open Questions</strong>
+              <div style="font-size:12px;color:var(--dim)">${openAnswered}/4 answered · 5 pts each (peer-marked)</div>
+            </div>
+            <button class="btn btn-sm btn-coral" onclick="startOpenQs('${group}')">${openAnswered>=4?"Review":"Continue"}</button>
+          </div>
+          <div class="progress-ring">${[0,1,2,3].map(i=>`<div class="dot ${i<openAnswered?'done':i===openAnswered?'current':''}">${i<openAnswered?'✓':i+1}</div>`).join("")}</div>
+        </div>`:""}
+        
+        ${feats.mcq?`
+        <div class="card2" style="border-left:3px solid var(--sky)">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <strong style="color:var(--wh)">📊 MCQ Quiz (10 Questions)</strong>
+              <div style="font-size:12px;color:var(--dim)">${mcqAnswered}/10 answered · Auto-marked</div>
+            </div>
+            <button class="btn btn-sm btn-sky" onclick="startMcq('${group}')">${ans.mcqDone?"Review":"Start Quiz"}</button>
+          </div>
+          <div class="score-bar"><div class="score-fill" style="width:${mcqAnswered*10}%;background:var(--sky)"></div></div>
+        </div>`:""}
+        
+        ${feats.peerMarking&&hasMarking?`
+        <div class="card2" style="border-left:3px solid var(--amber)">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <strong style="color:var(--wh)">⭐ Peer Marking</strong>
+              <div style="font-size:12px;color:var(--dim)">Mark ${markForGroup[0]}'s open answers (5 pts each)</div>
+            </div>
+            <button class="btn btn-sm btn-amber" onclick="startPeerMark('${group}','${markForGroup[0]}')">Mark Now</button>
+          </div>
+        </div>`:""}
+        
+        <button class="btn btn-ghost btn-full" onclick="navigate('scoreboard')">🏆 View Scoreboard</button>
+      </div>
+    </div>
+  `;
+}
+
+// ═══ OPEN QUESTIONS ═══
+function startOpenQs(group){
+  STATE._activeGroup=group;
+  STATE.currentView="open-qs";
+  render();
+}
+
+function renderOpenQs(el,group){
+  const ans=STATE.answers[group];
+  const currentIdx=ans.currentOpenIdx;
+  
+  if(currentIdx>=4||ans.open.every(o=>o.submitted)){
+    // All done - show summary
+    el.innerHTML=`
+      <div class="card fade-in">
+        <h3 style="color:var(--wh);margin-bottom:12px">✅ All Open Questions Submitted!</h3>
+        <p style="color:var(--dim);font-size:13px;margin-bottom:16px">Your answers have been sent to another group for peer marking.</p>
+        ${ans.open.map((o,i)=>{
+          const q=OPEN_QUESTIONS[o.qIdx];
+          return `<div class="card2" style="margin-bottom:8px">
+            <span class="badge ${['tag-coral','tag-mint','tag-sky','tag-amber'][q.topic]}">${TOPICS[q.topic].split(':')[0]}</span>
+            <p style="color:var(--tx);font-size:13px;margin:6px 0">${q.q}</p>
+            <div style="background:var(--slate);padding:10px;border-radius:8px;font-size:12px;color:var(--dim);margin-top:4px">${o.answer}</div>
+            ${o.score!==null?`<div style="margin-top:6px;font-weight:700;color:var(--mint)">Score: ${o.score}/5</div>`:`<div style="margin-top:6px;font-size:11px;color:var(--amber)">⏳ Awaiting peer marking</div>`}
+          </div>`;
+        }).join("")}
+        <button class="btn btn-ghost btn-full" style="margin-top:12px" onclick="enterGroup('${group}')">← Back to Hub</button>
+      </div>`;
+    return;
+  }
+  
+  const oq=ans.open[currentIdx];
+  const q=OPEN_QUESTIONS[oq.qIdx];
+  
+  el.innerHTML=`
+    <div class="card fade-in">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div>
+          <span class="badge ${['tag-coral','tag-mint','tag-sky','tag-amber'][q.topic]}">${TOPICS[q.topic].split(':')[0]}</span>
+          <span class="badge tag-purple">${q.level}</span>
+        </div>
+        <span style="color:var(--dim);font-size:12px">Question ${currentIdx+1} of 4</span>
+      </div>
+      <div class="progress-ring" style="margin-bottom:12px">${[0,1,2,3].map(i=>`<div class="dot ${i<currentIdx?'done':i===currentIdx?'current':''}">${i<currentIdx?'✓':i+1}</div>`).join("")}</div>
+      <p style="color:var(--wh);font-size:16px;line-height:1.6;margin-bottom:16px">${q.q}</p>
+      <textarea id="open-answer" placeholder="Type your group's answer here... Be specific and reference frameworks from the session." style="min-height:140px;margin-bottom:12px">${oq.answer}</textarea>
+      <button class="btn btn-coral btn-full" onclick="submitOpenAnswer('${group}',${currentIdx})">Submit Answer & Unlock Next →</button>
+      <p style="font-size:11px;color:var(--dim);margin-top:8px;text-align:center">Once submitted, this answer will be sent to another group for marking (5 points max).</p>
+    </div>`;
+}
+
+function submitOpenAnswer(group,idx){
+  const answer=document.getElementById("open-answer").value.trim();
+  if(answer.length<20){alert("Please write a more detailed answer (at least 20 characters).");return;}
+  STATE.answers[group].open[idx].answer=answer;
+  STATE.answers[group].open[idx].submitted=true;
+  STATE.answers[group].currentOpenIdx=idx+1;
+  save();render();
+}
+
+// ═══ MCQ ═══
+function startMcq(group){
+  STATE._activeGroup=group;
+  STATE.currentView="mcq";
+  STATE._mcqIdx=STATE._mcqIdx||0;
+  // Find first unanswered
+  const ans=STATE.answers[group];
+  const first=ans.mcq.findIndex(m=>m.selected===null);
+  STATE._mcqIdx=first>=0?first:0;
+  render();
+}
+
+function renderMcq(el,group){
+  const ans=STATE.answers[group];
+  
+  if(ans.mcqDone){
+    const correct=ans.mcq.filter(m=>m.selected===m.correct).length;
+    el.innerHTML=`
+      <div class="card fade-in" style="text-align:center">
+        <h3 style="color:var(--wh);margin-bottom:8px">MCQ Results</h3>
+        <div style="font-size:48px;font-weight:900;color:var(--sky);margin:8px 0">${correct}/10</div>
+        <p style="color:var(--dim);margin-bottom:16px">${correct>=8?"Excellent!":correct>=6?"Well done!":correct>=4?"Good effort!":"Keep learning!"}</p>
+        ${ans.mcq.map((m,i)=>{
+          const q=MCQ_BANK[m.qIdx];
+          return `<div class="card2" style="margin-bottom:6px;text-align:left">
+            <p style="font-size:12px;color:var(--tx);margin-bottom:4px">${i+1}. ${q.q}</p>
+            <span style="font-size:11px;color:${m.selected===m.correct?'var(--mint)':'var(--coral)'};font-weight:700">${m.selected===m.correct?'✓ Correct':'✗ Wrong'} — Answer: ${q.opts[q.correct]}</span>
+          </div>`;
+        }).join("")}
+        <button class="btn btn-ghost btn-full" style="margin-top:12px" onclick="enterGroup('${group}')">← Back to Hub</button>
+      </div>`;
+    return;
+  }
+  
+  const idx=STATE._mcqIdx;
+  if(idx>=10){
+    ans.mcqDone=true;save();renderMcq(el,group);return;
+  }
+  
+  const m=ans.mcq[idx];
+  const q=MCQ_BANK[m.qIdx];
+  const answered=m.selected!==null;
+  
+  el.innerHTML=`
+    <div class="card fade-in">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span class="badge ${['tag-coral','tag-mint','tag-sky','tag-amber'][q.topic]}">${TOPICS[q.topic].split(':')[0]}</span>
+        <span style="color:var(--dim);font-size:12px">${idx+1} / 10</span>
+      </div>
+      <div class="score-bar" style="margin-bottom:12px"><div class="score-fill" style="width:${idx*10}%;background:var(--sky)"></div></div>
+      <p style="color:var(--wh);font-size:15px;line-height:1.5;margin-bottom:16px">${q.q}</p>
+      ${q.opts.map((opt,oi)=>{
+        let cls="mcq-option";
+        if(answered){
+          if(oi===q.correct)cls+=" correct";
+          else if(oi===m.selected&&oi!==q.correct)cls+=" wrong";
+        }else if(m.selected===oi)cls+=" selected";
+        return `<button class="${cls}" ${answered?'disabled':''} onclick="selectMcq('${group}',${idx},${oi})">${String.fromCharCode(65+oi)}. ${opt}</button>`;
+      }).join("")}
+      ${answered?`
+        <div style="margin-top:12px">
+          <button class="btn btn-sky btn-full" onclick="nextMcq('${group}')">${idx<9?"Next Question →":"See Results"}</button>
+        </div>`:""}
+    </div>`;
+}
+
+function selectMcq(group,qIdx,optIdx){
+  STATE.answers[group].mcq[qIdx].selected=optIdx;
+  save();render();
+}
+
+function nextMcq(group){
+  STATE._mcqIdx=(STATE._mcqIdx||0)+1;
+  if(STATE._mcqIdx>=10){STATE.answers[group].mcqDone=true;}
+  save();render();
+}
+
+// ═══ PEER MARKING ═══
+function startPeerMark(markerGroup,targetGroup){
+  STATE._activeGroup=markerGroup;
+  STATE._markTarget=targetGroup;
+  STATE.currentView="peer-mark";
+  render();
+}
+
+function renderPeerMark(el,markerGroup){
+  const target=STATE._markTarget;
+  const ans=STATE.answers[target];
+  if(!ans){el.innerHTML=`<div class="card"><p>No answers to mark yet.</p></div>`;return;}
+  
+  const toMark=ans.open.filter(o=>o.submitted&&o.score===null);
+  
+  if(toMark.length===0){
+    el.innerHTML=`
+      <div class="card fade-in" style="text-align:center">
+        <div style="font-size:40px;margin-bottom:8px">✅</div>
+        <h3 style="color:var(--wh);margin-bottom:8px">All Answers Marked!</h3>
+        <p style="color:var(--dim)">Thank you for marking ${target}'s answers.</p>
+        <button class="btn btn-ghost" style="margin-top:12px" onclick="enterGroup('${markerGroup}')">← Back to Hub</button>
+      </div>`;
+    return;
+  }
+  
+  const item=toMark[0];
+  const q=OPEN_QUESTIONS[item.qIdx];
+  
+  el.innerHTML=`
+    <div class="card fade-in">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div>
+          <span class="badge tag-amber">⭐ Peer Marking</span>
+          <span style="color:var(--dim);font-size:12px;margin-left:8px">Marking ${target}'s answer</span>
+        </div>
+        <span style="color:var(--dim);font-size:12px">${toMark.length} remaining</span>
+      </div>
+      <div style="margin-bottom:12px">
+        <span class="badge ${['tag-coral','tag-mint','tag-sky','tag-amber'][q.topic]}">${TOPICS[q.topic].split(':')[0]}</span>
+        <span class="badge tag-purple">${q.level}</span>
+      </div>
+      <p style="color:var(--wh);font-size:14px;line-height:1.5;margin-bottom:12px"><strong>Question:</strong> ${q.q}</p>
+      <div style="background:var(--slate);padding:16px;border-radius:12px;margin-bottom:16px">
+        <p style="font-size:11px;color:var(--dim);margin-bottom:4px">Their Answer:</p>
+        <p style="color:var(--tx);font-size:14px;line-height:1.6">${item.answer}</p>
+      </div>
+      <div style="text-align:center;margin-bottom:12px">
+        <p style="font-size:13px;color:var(--wh);margin-bottom:8px">Award a score (0-5 points):</p>
+        <div style="display:flex;gap:8px;justify-content:center">
+          ${[0,1,2,3,4,5].map(s=>`<button class="btn btn-sm ${s>=4?'btn-mint':s>=2?'btn-amber':'btn-coral'}" style="width:48px;height:48px;font-size:18px;border-radius:12px" onclick="submitPeerMark('${markerGroup}','${target}',${item.qIdx},${s})">${s}</button>`).join("")}
+        </div>
+        <p style="font-size:11px;color:var(--dim);margin-top:6px">0=No attempt · 1-2=Partial · 3=Good · 4=Very Good · 5=Excellent</p>
+      </div>
+    </div>`;
+}
+
+function submitPeerMark(markerGroup,targetGroup,qIdx,score){
+  const ans=STATE.answers[targetGroup];
+  const item=ans.open.find(o=>o.qIdx===qIdx);
+  if(item){item.score=score;item.markedBy=markerGroup;}
+  save();render();
+}
+
+// ═══ SCOREBOARD ═══
+function renderScoreboard(el){
+  if(!STATE.admin.features.scoreboard){el.innerHTML=`<div class="card" style="text-align:center"><p>Scoreboard is disabled.</p></div>`;return;}
+  
+  const groups=Object.keys(STATE.groups);
+  const scores=groups.map(g=>{
+    const ans=STATE.answers[g];
+    if(!ans)return{name:g,open:0,mcq:0,total:0,color:STATE.groups[g]?.color||"coral"};
+    const openScore=ans.open.reduce((s,o)=>s+(o.score||0),0);
+    const mcqScore=ans.mcq.filter(m=>m.selected===m.correct).length;
+    return{name:g,open:openScore,mcq:mcqScore,total:openScore+mcqScore,color:STATE.groups[g]?.color||"coral"};
+  }).sort((a,b)=>b.total-a.total);
+  
+  const maxTotal=Math.max(...scores.map(s=>s.total),1);
+  
+  el.innerHTML=`
+    <div class="card fade-in">
+      <h3 style="color:var(--wh);font-size:20px;margin-bottom:4px;text-align:center">🏆 Scoreboard</h3>
+      <p style="color:var(--dim);font-size:12px;text-align:center;margin-bottom:16px">Open Questions (20 pts) + MCQ (10 pts) = 30 pts max</p>
+      
+      <div class="scoreboard-row" style="margin-bottom:4px">
+        <div style="font-size:10px;color:var(--dim)">#</div>
+        <div style="font-size:10px;color:var(--dim)">GROUP</div>
+        <div style="font-size:10px;color:var(--dim);text-align:center">OPEN</div>
+        <div style="font-size:10px;color:var(--dim);text-align:center">MCQ</div>
+        <div style="font-size:10px;color:var(--dim);text-align:center">TOTAL</div>
+      </div>
+      
+      ${scores.map((s,i)=>{
+        const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":"";
+        const bg=i===0?"rgba(249,112,102,.08)":i%2===0?"rgba(255,255,255,.02)":"transparent";
+        return `
+          <div class="scoreboard-row" style="background:${bg}">
+            <div style="font-size:${i<3?'18':'14'}px;text-align:center">${medal||i+1}</div>
+            <div>
+              <strong style="color:var(--wh);font-size:14px">${s.name}</strong>
+              <div class="score-bar" style="width:100%"><div class="score-fill" style="width:${(s.total/30)*100}%;background:${GRP_COLORS[s.color]}"></div></div>
+            </div>
+            <div style="text-align:center;font-weight:700;color:var(--coral)">${s.open}/20</div>
+            <div style="text-align:center;font-weight:700;color:var(--sky)">${s.mcq}/10</div>
+            <div style="text-align:center;font-weight:900;font-size:18px;color:var(--wh)">${s.total}</div>
+          </div>`;
+      }).join("")}
+      
+      <div style="text-align:center;margin-top:16px">
+        <button class="btn btn-ghost" onclick="navigate('home')">← Back to Home</button>
+      </div>
+    </div>
+    
+    ${Object.keys(STATE.individuals).length>0?`
+    <div class="card fade-in" style="margin-top:16px">
+      <h3 style="color:var(--wh);font-size:18px;margin-bottom:4px;text-align:center">👤 Individual Scores</h3>
+      <p style="color:var(--dim);font-size:12px;text-align:center;margin-bottom:12px">5 MCQs · Auto-marked · ${Object.values(STATE.individuals).filter(i=>i.done).length} completed</p>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        ${Object.entries(STATE.individuals).filter(([n,d])=>d.done).sort((a,b)=>b[1].score-a[1].score).slice(0,20).map(([name,data],i)=>{
+          const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":"";
+          const bg=i<3?"rgba(167,139,250,.08)":i%2===0?"rgba(255,255,255,.02)":"transparent";
+          const scoreCol=data.score>=4?"var(--mint)":data.score>=3?"var(--sky)":"var(--coral)";
+          return '<div style="display:grid;grid-template-columns:30px 1fr 60px;gap:8px;padding:8px 12px;border-radius:10px;background:'+bg+';align-items:center"><span style="font-size:'+(i<3?'16':'12')+'px;text-align:center">'+(medal||i+1)+'</span><span style="color:'+(i<3?'var(--wh)':'var(--tx)')+';font-size:13px;font-weight:'+(i<3?700:500)+'">'+name+'</span><span style="color:'+scoreCol+';font-size:15px;font-weight:800;text-align:center">'+data.score+'/5</span></div>';
+        }).join("")}
+      </div>
+    </div>`:""}
+    `;
+}
+
+// ═══ MASTER RENDER ═══
+function render(){
+  const navEl=$("nav-tabs");
+  const tabs=[{id:"home",label:"🏠 Home"},{id:"register",label:"📝 Groups"},{id:"play",label:"🎮 Groups"},{id:"individual",label:"👤 Individual"},{id:"scoreboard",label:"🏆 Scores"},{id:"admin",label:"⚙️ Admin"}];
+  const playViews=['group-hub','open-qs','mcq','peer-mark'];
+  const indViews=['ind-register','ind-quiz','ind-result'];
+  navEl.innerHTML=tabs.map(t=>`<div class="tab ${STATE.currentView===t.id||(playViews.includes(STATE.currentView)&&t.id==='play')||(indViews.includes(STATE.currentView)&&t.id==='individual')?'active':''}" onclick="navigate('${t.id}')">${t.label}</div>`).join("");
+  
+  const area=$("screen-area");
+  area.innerHTML="";
+  
+  const group=STATE._activeGroup;
+  
+  switch(STATE.currentView){
+    case "home": renderHome(area);break;
+    case "register": renderRegister(area);break;
+    case "play": renderPlay(area);break;
+    case "group-hub": if(group)renderGroupHub(area,group);else renderPlay(area);break;
+    case "open-qs": if(group)renderOpenQs(area,group);else renderPlay(area);break;
+    case "mcq": if(group)renderMcq(area,group);else renderPlay(area);break;
+    case "peer-mark": if(group)renderPeerMark(area,group);else renderPlay(area);break;
+    case "individual": renderIndividualHome(area);break;
+    case "ind-register": renderIndividualHome(area);break;
+    case "ind-quiz": renderIndQuiz(area);break;
+    case "ind-result": renderIndResult(area);break;
+    case "scoreboard": renderScoreboard(area);break;
+    case "admin": renderAdmin(area);break;
+    default: renderHome(area);
+  }
+}
+
+// ═══ INDIVIDUAL QUIZ ═══
+function renderIndividualHome(area){
+  if(!STATE.admin.features.individualQuiz){area.innerHTML=`<div class="card" style="text-align:center"><p>Individual Quiz is currently disabled by admin.</p><button class="btn btn-ghost" style="margin-top:12px" onclick="navigate('home')">← Home</button></div>`;return;}
+  
+  const indCount=Object.keys(STATE.individuals).length;
+  const doneCount=Object.values(STATE.individuals).filter(i=>i.done).length;
+  
+  area.innerHTML=`
+    <div class="card fade-in" style="text-align:center">
+      <div style="font-size:36px;margin-bottom:4px">👤</div>
+      <h2 style="color:var(--wh);font-size:20px;margin-bottom:4px">Individual MCQ Quiz</h2>
+      <p style="font-size:13px;color:var(--dim);margin-bottom:16px">5 random questions · Auto-marked · Personal score</p>
+      
+      <div style="margin-bottom:16px">
+        <input id="ind-name-input" type="text" placeholder="Enter your full name..." maxlength="30" style="max-width:360px;margin:0 auto;text-align:center"/>
+      </div>
+      <button class="btn btn-sky" onclick="startIndQuiz()" style="margin-bottom:12px">Start My Quiz →</button>
+      
+      ${indCount>0?`
+      <div style="margin-top:16px;text-align:left">
+        <h4 style="color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Individual Leaderboard (${doneCount} completed)</h4>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          ${Object.entries(STATE.individuals).filter(([n,d])=>d.done).sort((a,b)=>b[1].score-a[1].score).slice(0,15).map(([name,data],i)=>{
+            const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":"";
+            const bg=i<3?"rgba(56,189,248,.06)":i%2===0?"rgba(255,255,255,.02)":"transparent";
+            const scoreCol=data.score>=4?"var(--mint)":data.score>=3?"var(--sky)":"var(--coral)";
+            return `<div style="display:grid;grid-template-columns:30px 1fr 60px;gap:8px;padding:8px 12px;border-radius:10px;background:${bg};align-items:center">
+              <span style="font-size:${i<3?'16':'12'}px;text-align:center">${medal||i+1}</span>
+              <span style="color:${i<3?'var(--wh)':'var(--tx)'};font-size:13px;font-weight:${i<3?700:500};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
+              <span style="color:${scoreCol};font-size:15px;font-weight:800;text-align:center">${data.score}/5</span>
+            </div>`;
+          }).join("")}
+        </div>
+      </div>`:""}
+      
+      <button class="btn btn-ghost" style="margin-top:12px" onclick="navigate('home')">← Back to Home</button>
+    </div>
+  `;
+}
+
+function startIndQuiz(){
+  const nameEl=document.getElementById("ind-name-input");
+  if(!nameEl)return;
+  const name=nameEl.value.trim();
+  if(!name){alert("Please enter your name.");return;}
+  
+  // Check if already done
+  if(STATE.individuals[name]&&STATE.individuals[name].done){
+    if(!confirm(`${name} has already completed the quiz (Score: ${STATE.individuals[name].score}/5). Take it again?`))return;
+  }
+  
+  // Assign 5 random MCQs from individual bank
+  const pool=INDIVIDUAL_MCQ.map((q,i)=>i);
+  const picked=shuffle(pool).slice(0,5);
+  
+  STATE.individuals[name]={
+    mcqIdxs:picked,
+    mcq:picked.map(idx=>({qIdx:idx,selected:null,correct:INDIVIDUAL_MCQ[idx].correct})),
+    done:false,
+    score:0,
+    currentIdx:0
+  };
+  STATE._indName=name;
+  STATE._indMcqIdx=0;
+  STATE.currentView="ind-quiz";
+  save();render();
+}
+
+function renderIndQuiz(area){
+  const name=STATE._indName;
+  if(!name||!STATE.individuals[name]){navigate("individual");return;}
+  const ind=STATE.individuals[name];
+  const idx=ind.currentIdx||0;
+  
+  if(idx>=5||ind.done){
+    // Auto-calculate and show results
+    ind.done=true;
+    ind.score=ind.mcq.filter(m=>m.selected===m.correct).length;
+    save();
+    STATE.currentView="ind-result";
+    render();return;
+  }
+  
+  const m=ind.mcq[idx];
+  const q=INDIVIDUAL_MCQ[m.qIdx];
+  const answered=m.selected!==null;
+  
+  area.innerHTML=`
+    <div class="card fade-in">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div>
+          <span class="badge tag-purple">👤 ${name}</span>
+          <span class="badge ${['tag-coral','tag-mint','tag-sky','tag-amber'][q.topic]}">${TOPICS[q.topic].split(':')[0]}</span>
+        </div>
+        <span style="color:var(--dim);font-size:12px">${idx+1} / 5</span>
+      </div>
+      <div class="score-bar" style="margin-bottom:14px"><div class="score-fill" style="width:${idx*20}%;background:var(--purple)"></div></div>
+      <p style="color:var(--wh);font-size:15px;line-height:1.5;margin-bottom:16px">${q.q}</p>
+      ${q.opts.map((opt,oi)=>{
+        let cls="mcq-option";
+        if(answered){
+          if(oi===q.correct)cls+=" correct";
+          else if(oi===m.selected&&oi!==q.correct)cls+=" wrong";
+        }
+        return `<button class="${cls}" ${answered?'disabled':''} onclick="indSelectMcq('${name}',${idx},${oi})">${String.fromCharCode(65+oi)}. ${opt}</button>`;
+      }).join("")}
+      ${answered?`<button class="btn btn-sky btn-full" style="margin-top:12px" onclick="indNextMcq('${name}')">${idx<4?"Next Question →":"See My Results"}</button>`:""}
+    </div>`;
+}
+
+function indSelectMcq(name,qIdx,optIdx){
+  STATE.individuals[name].mcq[qIdx].selected=optIdx;
+  save();render();
+}
+
+function indNextMcq(name){
+  STATE.individuals[name].currentIdx=(STATE.individuals[name].currentIdx||0)+1;
+  if(STATE.individuals[name].currentIdx>=5){STATE.individuals[name].done=true;STATE.individuals[name].score=STATE.individuals[name].mcq.filter(m=>m.selected===m.correct).length;}
+  save();
+  if(STATE.individuals[name].done){STATE.currentView="ind-result";}
+  render();
+}
+
+function renderIndResult(area){
+  const name=STATE._indName;
+  if(!name||!STATE.individuals[name]){navigate("individual");return;}
+  const ind=STATE.individuals[name];
+  const score=ind.score;
+  const emoji=score>=5?"🏆":score>=4?"🌟":score>=3?"💡":score>=2?"📚":"🔍";
+  const msg=score>=5?"Perfect score! Outstanding knowledge!":score>=4?"Excellent! You clearly understand the material.":score>=3?"Good work! Solid understanding across topics.":score>=2?"Getting there! Review the session materials.":"Keep learning! The materials will help you grow.";
+  
+  // Rank
+  const sorted=Object.entries(STATE.individuals).filter(([n,d])=>d.done).sort((a,b)=>b[1].score-a[1].score);
+  const rank=sorted.findIndex(([n])=>n===name)+1;
+  
+  area.innerHTML=`
+    <div class="card fade-in" style="text-align:center">
+      <div style="font-size:48px;margin-bottom:4px">${emoji}</div>
+      <h2 style="color:var(--wh);font-size:20px;margin-bottom:2px">${name}</h2>
+      <div style="font-size:44px;font-weight:900;color:var(--purple);margin:6px 0">${score}/5</div>
+      <p style="color:var(--sky);font-size:13px;margin-bottom:4px">Rank #${rank} of ${sorted.length} participants</p>
+      <div style="display:flex;gap:4px;justify-content:center;margin:10px 0">
+        ${ind.mcq.map(m=>`<div class="dot" style="background:${m.selected===m.correct?'var(--mint)':'var(--coral)'}">${m.selected===m.correct?'✓':'✗'}</div>`).join("")}
+      </div>
+      <p style="color:var(--tx);font-size:14px;margin-bottom:16px">${msg}</p>
+      
+      <div style="text-align:left;margin-bottom:16px">
+        ${ind.mcq.map((m,i)=>{
+          const q=INDIVIDUAL_MCQ[m.qIdx];
+          return `<div class="card2" style="margin-bottom:6px">
+            <p style="font-size:12px;color:var(--tx);margin-bottom:4px">${i+1}. ${q.q}</p>
+            <div style="font-size:11px">
+              <span style="color:${m.selected===m.correct?'var(--mint)':'var(--coral)'};font-weight:700">${m.selected===m.correct?'✓ Correct':'✗ Wrong'}</span>
+              ${m.selected!==m.correct?`<span style="color:var(--dim)"> — Answer: <strong style="color:var(--mint)">${q.opts[q.correct]}</strong></span>`:''}
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+      
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-purple btn-full" style="flex:1;background:linear-gradient(135deg,#A78BFA,#7C3AED);color:#fff" onclick="navigate('individual')">← Individual Board</button>
+        <button class="btn btn-ghost" style="flex:1" onclick="navigate('scoreboard')">🏆 Scoreboard</button>
+      </div>
+    </div>`;
+}
+
+render();
+</script>
+</body>
+</html>
