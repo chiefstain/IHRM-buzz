@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Reflection & Q&A Platform — AI & HR</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --bg:#07090F;--card:#0F1420;--card2:#141B2A;--card3:#1A2235;
+  --coral:#FF6B6B;--mint:#00E5A0;--amber:#FFB347;--sky:#4FC3F7;
+  --gold:#FFD700;--purple:#B388FF;--pink:#FF6EC7;--teal:#26C6DA;
+  --tx:#C8D6E5;--dim:#556677;--wh:#fff;--slate:#1A2235;--border:#1E2D42;
+  --radius:16px;--gap:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Space Grotesk',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:300px;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(79,195,247,.07),transparent);pointer-events:none;z-index:0}
+
+.container{max-width:920px;margin:0 auto;padding:16px;position:relative;z-index:1}
+.hidden{display:none!important}
+button{font-family:inherit;cursor:pointer;border:none;transition:all .18s;font-weight:600}
+button:hover{transform:translateY(-1px)}
+button:active{transform:translateY(0) scale(.98)}
+input,textarea,select{font-family:inherit;background:var(--slate);border:1.5px solid var(--border);border-radius:12px;padding:12px 16px;color:var(--wh);font-size:14px;width:100%;outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(79,195,247,.12)}
+textarea{resize:vertical;min-height:100px}
+
+.btn{border-radius:12px;padding:12px 24px;font-size:14px;font-weight:700;letter-spacing:.2px;position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .15s}
+.btn:hover::after{background:rgba(255,255,255,.07)}
+.btn-coral{background:linear-gradient(135deg,#FF6B6B,#E53E3E);color:#fff;box-shadow:0 4px 15px rgba(255,107,107,.25)}
+.btn-mint{background:linear-gradient(135deg,#00E5A0,#00B377);color:#000;box-shadow:0 4px 15px rgba(0,229,160,.2)}
+.btn-sky{background:linear-gradient(135deg,#4FC3F7,#0288D1);color:#fff;box-shadow:0 4px 15px rgba(79,195,247,.2)}
+.btn-amber{background:linear-gradient(135deg,#FFB347,#E67E00);color:#000;box-shadow:0 4px 15px rgba(255,179,71,.2)}
+.btn-purple{background:linear-gradient(135deg,#B388FF,#7C4DFF);color:#fff;box-shadow:0 4px 15px rgba(179,136,255,.2)}
+.btn-pink{background:linear-gradient(135deg,#FF6EC7,#E91E8C);color:#fff;box-shadow:0 4px 15px rgba(255,110,199,.2)}
+.btn-ghost{background:rgba(255,255,255,.05);color:var(--tx);border:1px solid var(--border)}
+.btn-ghost:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.2)}
+.btn-sm{padding:8px 16px;font-size:12px;border-radius:10px}
+.btn-full{width:100%;display:block;text-align:center}
+.btn-xs{padding:5px 12px;font-size:11px;border-radius:8px}
+
+.card{background:var(--card);border-radius:20px;padding:24px;border:1px solid rgba(255,255,255,.05);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.card2{background:var(--card2);border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,.04)}
+.card3{background:var(--card3);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,.03)}
+
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.3px}
+.tag-coral{background:rgba(255,107,107,.15);color:var(--coral)}
+.tag-mint{background:rgba(0,229,160,.12);color:var(--mint)}
+.tag-sky{background:rgba(79,195,247,.12);color:var(--sky)}
+.tag-amber{background:rgba(255,179,71,.12);color:var(--amber)}
+.tag-purple{background:rgba(179,136,255,.12);color:var(--purple)}
+.tag-pink{background:rgba(255,110,199,.12);color:var(--pink)}
+.tag-teal{background:rgba(38,198,218,.12);color:var(--teal)}
+
+.header{text-align:center;padding:28px 0 18px}
+.header h1{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--wh);margin-bottom:4px;background:linear-gradient(135deg,#fff,#4FC3F7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header p{color:var(--dim);font-size:13px}
+
+.tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap;background:rgba(255,255,255,.03);border-radius:14px;padding:5px;border:1px solid var(--border)}
+.tab{padding:8px 14px;border-radius:10px;font-size:12px;font-weight:600;color:var(--dim);cursor:pointer;transition:all .2s;white-space:nowrap;flex:1;text-align:center}
+.tab.active{background:rgba(79,195,247,.12);color:var(--sky);box-shadow:0 2px 8px rgba(79,195,247,.1)}
+.tab:hover:not(.active){color:var(--tx);background:rgba(255,255,255,.04)}
+
+.progress-ring{display:flex;gap:4px;margin:8px 0}
+.progress-ring .dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:var(--slate);color:var(--dim);transition:all .3s}
+.progress-ring .dot.done{background:var(--mint);color:#000}
+.progress-ring .dot.current{background:var(--sky);color:#fff;box-shadow:0 0 12px rgba(79,195,247,.5)}
+
+.score-bar{height:6px;border-radius:3px;background:var(--slate);overflow:hidden;margin:6px 0}
+.score-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+
+.member-chip{background:rgba(255,255,255,.06);padding:4px 12px;border-radius:20px;font-size:12px;color:var(--tx);border:1px solid rgba(255,255,255,.08)}
+
+/* MCQ Options */
+.mcq-option{display:block;width:100%;text-align:left;padding:15px 18px;border-radius:12px;background:var(--slate);color:var(--tx);font-size:14px;margin-bottom:8px;border:2px solid transparent;cursor:pointer;transition:all .18s;position:relative}
+.mcq-option:hover:not(:disabled){border-color:rgba(79,195,247,.4);background:rgba(79,195,247,.06);transform:translateX(3px)}
+.mcq-option.selected{border-color:var(--sky);background:rgba(79,195,247,.1);color:var(--wh)}
+.mcq-option.correct{border-color:var(--mint);background:rgba(0,229,160,.1);color:var(--mint)}
+.mcq-option.wrong{border-color:var(--coral);background:rgba(255,107,107,.1);color:var(--coral)}
+.mcq-option:disabled{cursor:default}
+.mcq-option .opt-letter{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.08);font-size:11px;font-weight:700;margin-right:10px;flex-shrink:0}
+
+/* Timer */
+.timer-ring{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.timer-ring svg{transform:rotate(-90deg)}
+.timer-ring .time-text{position:absolute;font-family:'Syne',sans-serif;font-size:22px;font-weight:800}
+.timer-bar{height:8px;border-radius:4px;background:var(--slate);overflow:hidden;margin-bottom:16px;position:relative}
+.timer-fill{height:100%;border-radius:4px;transition:width .9s linear}
+.timer-fill.urgent{animation:urgentPulse .5s ease infinite alternate}
+@keyframes urgentPulse{from{opacity:1}to{opacity:.6}}
+
+/* Scoreboard */
+.sb-row{display:grid;grid-template-columns:44px 1fr 70px 70px 80px;gap:8px;padding:10px 14px;border-radius:12px;align-items:center;transition:background .2s}
+.sb-row:hover{background:rgba(255,255,255,.03)}
+
+/* Celebration */
+@keyframes confettiFall{
+  0%{transform:translateY(-20px) rotate(0);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+.confetti-piece{position:fixed;width:10px;height:10px;border-radius:2px;pointer-events:none;z-index:9999;animation:confettiFall linear forwards}
+
+/* Pulse animation for live indicator */
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--mint);display:inline-block;animation:livePulse 1.5s ease infinite;margin-right:6px}
+
+/* Notification toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 20px;font-size:14px;color:var(--wh);z-index:10000;animation:slideUp .3s ease;box-shadow:0 8px 32px rgba(0,0,0,.4);max-width:320px}
+.toast.success{border-color:rgba(0,229,160,.3);background:rgba(0,229,160,.08)}
+.toast.info{border-color:rgba(79,195,247,.3);background:rgba(79,195,247,.08)}
+.toast.warning{border-color:rgba(255,179,71,.3);background:rgba(255,179,71,.08)}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* Fade/slide animations */
+.fade-in{animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.scale-in{animation:scaleIn .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes scaleIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* Group color borders */
+.group-coral{border-left:4px solid var(--coral)!important}
+.group-mint{border-left:4px solid var(--mint)!important}
+.group-amber{border-left:4px solid var(--amber)!important}
+.group-sky{border-left:4px solid var(--sky)!important}
+.group-purple{border-left:4px solid var(--purple)!important}
+.group-pink{border-left:4px solid var(--pink)!important}
+
+/* Reason reveal box */
+.reason-box{background:linear-gradient(135deg,rgba(0,229,160,.07),rgba(79,195,247,.05));border:1px solid rgba(0,229,160,.2);border-radius:12px;padding:14px;margin-top:12px;font-size:13px;color:var(--tx);line-height:1.6;animation:fadeIn .4s ease}
+.reason-box strong{color:var(--mint)}
+
+/* Scoreboard live badge */
+.live-badge{background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.3);color:var(--mint);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+
+/* Admin toggle */
+.admin-toggle{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card2);border-radius:12px;margin-bottom:6px}
+.toggle{width:44px;height:24px;border-radius:12px;background:var(--slate);position:relative;cursor:pointer;transition:background .3s;flex-shrink:0}
+.toggle.on{background:var(--mint)}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .3s}
+.toggle.on::after{transform:translateX(20px)}
+
+.qr-container{background:var(--wh);border-radius:16px;padding:14px;display:inline-block;box-shadow:0 0 40px rgba(79,195,247,.15)}
+.qr-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;margin:16px 0}
+.url-display{background:var(--slate);border:1px solid var(--border);border-radius:10px;padding:10px 18px;font-size:13px;color:var(--sky);font-weight:600;display:inline-flex;align-items:center;gap:8px;cursor:pointer;transition:all .2s}
+.url-display:hover{border-color:var(--sky);background:rgba(79,195,247,.08)}
+
+/* Notification bell pulse */
+@keyframes bellShake{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}}
+.notify-bell{animation:bellShake .4s ease 3}
+
+/* Big stat */
+.big-stat{font-family:'Syne',sans-serif;font-size:52px;font-weight:800;line-height:1}
+
+@media(max-width:600px){
+  .container{padding:10px}
+  .card{padding:16px}
+  .header h1{font-size:24px}
+  .sb-row{grid-template-columns:32px 1fr 55px 55px 65px;font-size:12px}
+  .big-stat{font-size:38px}
+  .tabs .tab{font-size:11px;padding:7px 8px}
+}
+</style>
+</head>
+<body>
+<div class="container" id="app">
+  <div class="header">
+    <div style="font-size:40px;margin-bottom:6px">🎯</div>
+    <h1>Reflection & Q&A Platform</h1>
+    <p>AI & HR Professional Development</p>
+    <div style="margin-top:8px;font-size:11px;color:var(--dim)">Prepared by <strong style="color:var(--sky)">Danstan Akwiri</strong> · <a href="https://www.linkedin.com/in/danstanakwiri/" target="_blank" style="color:var(--sky);text-decoration:none">LinkedIn</a></div>
+  </div>
+  <div class="tabs" id="nav-tabs"></div>
+  <div id="screen-area"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════
+const TOPICS = [
+  "Overview of AI Tools for HR & Management",
+  "Data-Driven Decision Making in Practice",
+  "Hands-on Session: Applying AI Tools in HR",
+  "Human-Centered Leadership in the Age of AI"
+];
+
+const OPEN_QUESTIONS = [
+  {topic:0,q:"Identify 3 AI tools that could transform recruitment in your organization and explain how you would implement one of them within 90 days.",level:"Application"},
+  {topic:0,q:"Your CEO asks: 'Why should we invest in AI for HR when we already have an HRIS?' Draft a 2-minute business case with specific ROI data.",level:"Synthesis"},
+  {topic:0,q:"A department head says AI-powered performance monitoring will 'keep employees accountable.' What ethical concerns would you raise and how would you propose an alternative approach?",level:"Evaluation"},
+  {topic:0,q:"Map the AI tools ecosystem for your organization: which of the 7 HR categories should be your priority and why? What tool would you pilot first?",level:"Analysis"},
+  {topic:0,q:"An AI recruitment tool screens out 80% of applicants. A hiring manager complains about missing 'good candidates.' How would you investigate and respond?",level:"Problem-Solving"},
+  {topic:0,q:"Compare the strengths and limitations of generative AI (ChatGPT/Claude) versus specialist HR AI tools (Eightfold/Visier). When would you use each?",level:"Analysis"},
+  {topic:1,q:"A senior leader says 'I've been in this industry for 20 years — I don't need data to make hiring decisions.' How would you respectfully make the case for data-driven approaches?",level:"Application"},
+  {topic:1,q:"Your attrition rate is 22%. Using the DDDM framework (Define→Collect→Analyse→Decide→Review), outline how you would investigate and address this.",level:"Application"},
+  {topic:1,q:"You have data showing that remote workers are 12% more productive but 15% less collaborative. The CEO wants everyone back in office. What do you recommend and why?",level:"Synthesis"},
+  {topic:1,q:"Identify 3 cognitive biases that could affect a promotion decision and explain how data can correct each one.",level:"Analysis"},
+  {topic:1,q:"You discover that your AI analytics tool's attrition predictions are 87% accurate overall but only 62% accurate for employees under 25. What do you do?",level:"Evaluation"},
+  {topic:1,q:"Design a 'data dashboard' for a Head of HR: what 5 metrics would you include, why, and how often should each be updated?",level:"Synthesis"},
+  {topic:2,q:"Simulate this scenario: You need to draft a job description using AI, then audit it for bias. Walk through the exact steps, prompts, and checks you would perform.",level:"Application"},
+  {topic:2,q:"A manager asks you to use AI to identify which team members are 'flight risks.' Design the workflow: what data, what tool, what safeguards, what human oversight?",level:"Synthesis"},
+  {topic:2,q:"Your company deployed an AI chatbot for employee queries. After 3 months, 40% of employees say they prefer talking to a human. What went wrong and how do you fix it?",level:"Problem-Solving"},
+  {topic:2,q:"Create a practical plan: How would you use AI to personalise learning pathways for 500 employees with different roles, skill levels, and career goals?",level:"Application"},
+  {topic:2,q:"You're asked to build a business case for implementing Visier. What specific outcomes would you promise, and how would you measure success at 6 months?",level:"Synthesis"},
+  {topic:2,q:"An AI tool recommends terminating an employee contract based on performance data. The employee's manager disagrees strongly. Facilitate this decision using the HEAR framework.",level:"Problem-Solving"},
+  {topic:3,q:"Using the 5-Pillar Model (Empathy, Ethics, Clarity, Growth Mindset, Trust), rate your own leadership on a 1-5 scale for each pillar and identify your top growth area.",level:"Self-Assessment"},
+  {topic:3,q:"'AI doesn't create culture — it amplifies it.' Give a real or hypothetical example of AI amplifying a healthy culture AND a toxic culture.",level:"Analysis"},
+  {topic:3,q:"Satya Nadella transformed Microsoft from a 'know-it-all' to a 'learn-it-all' culture. What specific leadership actions could you apply in your own organization?",level:"Application"},
+  {topic:3,q:"The 'leadership atrophy' risk: As AI handles more tasks, leaders may stop practising human judgment. Design 3 concrete practices that prevent this atrophy.",level:"Synthesis"},
+  {topic:3,q:"48% of employees would leave a role with 'emotionally unavailable' leadership. With AI handling more routine interactions, how do you ensure your leadership remains emotionally present?",level:"Evaluation"},
+  {topic:3,q:"M-Kopa in Kenya uses AI for credit scoring but maintains human agents for relationship-based support. What leadership principles from this case apply to YOUR industry?",level:"Application"},
+];
+
+const MCQ_BANK = [
+  {topic:0,q:"What percentage of HR functions now use AI tools according to SHRM 2026?",opts:["26%","43%","67%","81%"],correct:1,reason:"SHRM 2026 data shows 43% of HR functions have adopted AI tools, reflecting rapid growth from under 30% just two years prior. This marks a tipping point for mainstream adoption in the profession."},
+  {topic:0,q:"Which AI tool uses deep learning on 1.6B+ career profiles for talent matching?",opts:["HireVue","Greenhouse","Eightfold.ai","SeekOut"],correct:2,reason:"Eightfold.ai is trained on over 1.6 billion career profiles, enabling it to match talent based on potential and skills rather than just job titles. This makes it uniquely powerful for diversity hiring and internal mobility."},
+  {topic:0,q:"What does the 'T' stand for in the FITS Framework for AI tool selection?",opts:["Timely","Transparent","Technical","Tested"],correct:1,reason:"In the FITS Framework, T stands for Transparent — meaning the AI tool must be explainable. HR decisions affecting people's careers must not be black boxes; transparency enables auditability and fairness."},
+  {topic:0,q:"Which company acquired Paradox (conversational AI) in 2025?",opts:["SAP","Oracle","Workday","Microsoft"],correct:2,reason:"Workday acquired Paradox in 2025, signaling that conversational AI (chatbots for recruiting) is now considered core HCM infrastructure. This acquisition underscores AI's move from a feature to a foundational layer."},
+  {topic:0,q:"AI-powered hiring tools can improve workforce diversity by approximately:",opts:["10%","20%","35%","50%"],correct:2,reason:"Research shows AI-driven blind screening and structured assessment can improve workforce diversity by around 35% by removing unconscious bias in résumé filtering and interview scheduling. However, this benefit is lost if the training data itself is biased."},
+  {topic:1,q:"According to the DDDM framework, what is the most neglected step?",opts:["Define","Collect","Analyse","Review"],correct:3,reason:"The Review step is most frequently skipped in practice. Organizations often complete a data project, make a decision, then move on — without looping back to evaluate whether the decision worked. Without review, you cannot improve future decisions."},
+  {topic:1,q:"What percentage of decisions in organisations are based on intuition rather than evidence?",opts:["28%","42%","58%","73%"],correct:2,reason:"Studies consistently show that 58% of organizational decisions are gut-driven rather than evidence-based. This is especially prevalent in promotions and hiring, where familiarity and comfort often substitute for data."},
+  {topic:1,q:"Predictive AI can forecast employee turnover with what accuracy?",opts:["65%","72%","87%","95%"],correct:2,reason:"Modern predictive analytics can forecast turnover with up to 87% accuracy when trained on enough behavioral and engagement data. However, accuracy drops when data is incomplete or when external factors (like a pandemic) break historical patterns."},
+  {topic:1,q:"Which cognitive bias involves over-weighting the first piece of information received?",opts:["Confirmation Bias","Anchoring Bias","Recency Bias","Survivorship Bias"],correct:1,reason:"Anchoring Bias causes us to over-rely on the first number or fact we encounter. In HR, this is dangerous when salary negotiations or performance scores are set early and all subsequent information is adjusted around that initial anchor."},
+  {topic:1,q:"The average cost of a bad senior hiring decision is approximately:",opts:["$50K","$100K","$250K","$500K"],correct:2,reason:"Research puts the cost of a failed senior hire at roughly 2.5–5x their annual salary when you factor in recruitment costs, onboarding, lost productivity, team morale impact, and separation costs. For a $100K role, that's $250K or more."},
+  {topic:2,q:"What is 'agentic AI' in the context of HR recruitment?",opts:["AI that replaces recruiters entirely","AI that reasons, plans and acts autonomously on tasks","AI limited to answering FAQs","AI that only works with structured data"],correct:1,reason:"Agentic AI can reason over a goal, break it into steps, and execute them autonomously — for example, sourcing candidates, screening CVs, scheduling interviews, and sending follow-ups without human prompting at each stage. This is a major leap from chatbots."},
+  {topic:2,q:"When deploying AI for employee performance monitoring, what should always be maintained?",opts:["Full automation","Human override capability","Anonymous data only","Monthly reporting only"],correct:1,reason:"Human override capability is non-negotiable in performance AI. No algorithm should have the final say on someone's career without a human being able to review, challenge, and override the output. This is required by the EU AI Act for high-risk HR systems."},
+  {topic:2,q:"The EU AI Act classifies AI hiring tools as:",opts:["Low-risk","Medium-risk","High-risk","Prohibited"],correct:2,reason:"AI systems used in hiring, promotion, and performance management are classified as High-Risk under the EU AI Act. This requires mandatory human oversight, bias auditing, transparency documentation, and conformity assessments before deployment."},
+  {topic:2,q:"What does the 'H' in the HEAR Framework stand for?",opts:["Holistic approach","Human oversight","Hiring accuracy","Historical data"],correct:1,reason:"In the HEAR Framework (Human Oversight, Explainable decisions, Accountability loops, Review mechanism), the H stands for Human Oversight — the principle that AI outputs in HR must always be reviewed, challenged, and validated by a qualified human decision-maker."},
+  {topic:2,q:"AI-based skill matching can predict job performance with what accuracy?",opts:["55%","67%","78%","92%"],correct:2,reason:"Skills-based AI matching (like Eightfold and Phenom) achieves around 78% predictive accuracy for job performance — significantly outperforming traditional CV screening but still requiring human judgment for cultural fit and context."},
+  {topic:3,q:"According to research, what percentage of top-performing leaders have high emotional intelligence?",opts:["60%","75%","85%","90%"],correct:3,reason:"TalentSmart research found that 90% of top performers score high on emotional intelligence (EQ). As AI automates more analytical tasks, EQ becomes the defining differentiator of effective human leadership in the AI age."},
+  {topic:3,q:"What did Satya Nadella replace Microsoft's 'know-it-all' culture with?",opts:["Performance culture","Learn-it-all culture","Innovation culture","Data culture"],correct:1,reason:"Nadella replaced Microsoft's toxic fixed-mindset 'know-it-all' culture with a 'learn-it-all' growth mindset culture rooted in Carol Dweck's research. This transformation helped grow Microsoft's market cap from $300B to over $3T — one of the greatest corporate turnarounds in history."},
+  {topic:3,q:"The 'leadership atrophy' risk refers to:",opts:["Leaders being replaced by AI","Leaders losing human judgment skills from over-relying on AI","Leaders refusing to adopt AI","Leaders spending too much on AI tools"],correct:1,reason:"Leadership atrophy is the risk that as AI handles more decisions, leaders stop exercising — and therefore weaken — their capacity for empathy, nuanced judgment, and ethical reasoning. Like a muscle, leadership capability deteriorates without regular use."},
+  {topic:3,q:"What percentage of employees would leave a role with 'emotionally unavailable' leadership?",opts:["25%","34%","48%","62%"],correct:2,reason:"Research shows 48% of employees would leave a job because of emotionally unavailable leadership. As AI takes over transactional interactions, the expectation for human leaders to provide emotional presence, meaning, and psychological safety has never been higher."},
+  {topic:3,q:"According to the 5-Pillar Model, which is NOT one of the pillars?",opts:["Empathy","Efficiency","Clarity","Trust Building"],correct:1,reason:"Efficiency is NOT one of the five pillars of human-centered leadership. The pillars are Empathy, Ethics, Clarity, Growth Mindset, and Trust Building. Efficiency is important but it's an outcome — not a foundational leadership principle in the human-centered model."},
+];
+
+const INDIVIDUAL_MCQ = [
+  {topic:0,q:"What is the primary purpose of SeekOut as an AI HR tool?",opts:["Performance reviews","Talent sourcing & diversity hiring","Payroll automation","Learning management"],correct:1,reason:"SeekOut specialises in talent intelligence and diversity sourcing, using AI to surface underrepresented candidates from open web data. It's particularly valued for finding diverse talent that traditional job boards miss."},
+  {topic:0,q:"Phenom's X+ Agents represent which type of AI?",opts:["Narrow AI","Generative AI","Agentic AI","Symbolic AI"],correct:2,reason:"Phenom's X+ Agents are agentic AI — they can autonomously plan, reason, and execute multi-step HR tasks like candidate outreach, interview scheduling, and follow-up without needing human input at every step."},
+  {topic:0,q:"How much can AI reduce recruitment costs according to research?",opts:["10%","20%","30%","50%"],correct:2,reason:"Organisations using AI in recruitment report approximately 30% cost reduction through automated screening, reduced time-to-hire, and lower dependency on external agencies. Eightfold and HireVue customers consistently cite savings in this range."},
+  {topic:0,q:"Which platform was acquired by Workday for $1.1 billion for AI-powered learning?",opts:["Degreed","Coursera","Sana","Udemy"],correct:2,reason:"Workday acquired Sana for $1.1B to embed AI-powered personalized learning directly into its HCM platform. Sana uses LLMs to create adaptive learning paths based on each employee's role, skills gaps, and career goals."},
+  {topic:0,q:"What does 'FITS' stand for in the AI tool selection framework?",opts:["Fast, Intelligent, Tested, Scalable","Fit, Integrate, Transparent, Secure","Flexible, Innovative, Targeted, Strategic","Functional, Interoperable, Trusted, Safe"],correct:1,reason:"FITS stands for Fit (does it solve our specific problem?), Integrate (does it connect to existing systems?), Transparent (can we explain its decisions?), and Secure (does it protect employee data?). This framework prevents buying impressive-looking AI that doesn't actually work for your context."},
+  {topic:1,q:"In the DDDM framework, what comes after 'Collect'?",opts:["Define","Analyse","Decide","Review"],correct:1,reason:"The DDDM sequence is Define → Collect → Analyse → Decide → Review. After collecting data, you Analyse it to extract insights before making a decision. Skipping analysis and jumping to decision is a common error that leads to misinterpreting data."},
+  {topic:1,q:"What is 'noise' in decision-making according to Kahneman?",opts:["Too much data","Unwanted variability in judgments","Background distractions","Irrelevant information"],correct:1,reason:"In Kahneman's 'Noise: A Flaw in Human Judgment,' noise refers to unwanted variability — two people with the same information making different decisions, or the same person making different decisions on different days. Noise is distinct from bias and is often more damaging in HR contexts."},
+  {topic:1,q:"Survivorship bias in HR means:",opts:["Only studying why employees survive layoffs","Focusing on successful hires while ignoring failed ones","Keeping the longest-serving employees","Using survival analysis for attrition"],correct:1,reason:"Survivorship bias causes us to study only the employees who stayed or succeeded, drawing misleading conclusions about what makes a good hire. The full picture requires studying both successful AND unsuccessful hires, including those who left early."},
+  {topic:1,q:"A well-structured spreadsheet is better than expensive software when:",opts:["Always","Never","When you have the right questions","When you have more than 1000 employees"],correct:2,reason:"The most important ingredient in data-driven decision making is asking the right question — not having the most sophisticated tool. A simple spreadsheet with the right analytical framework often beats expensive software used without clear purpose or hypotheses."},
+  {topic:1,q:"What ROI do companies using data analytics typically see compared to those that don't?",opts:["2x","5x","10x","20x"],correct:2,reason:"McKinsey and Deloitte research consistently shows data-driven organizations achieve 10x better ROI from their HR investments compared to intuition-driven organizations. This gap is attributed to faster problem identification, better hiring decisions, and reduced attrition."},
+  {topic:2,q:"What should always happen before deploying AI for HR decisions?",opts:["Full automation testing","Bias audit and employee notification","Board approval only","IT department review only"],correct:1,reason:"A bias audit and employee notification are ethical and legal requirements. The bias audit ensures the AI doesn't discriminate; employee notification respects autonomy and builds trust. NYC Local Law 144 and the EU AI Act both mandate these steps before deployment."},
+  {topic:2,q:"NYC Local Law 144 requires what for AI hiring tools?",opts:["Complete ban on AI","Annual independent bias audits","Government approval per hire","Mandatory AI training for all staff"],correct:1,reason:"NYC Local Law 144, the first municipal law regulating AI in hiring, requires employers to conduct annual independent bias audits of automated employment decision tools and to notify candidates when such tools are used. It's a template for AI governance globally."},
+  {topic:2,q:"The HEAR framework's 'Review Loop' ensures:",opts:["Annual performance reviews","Tracking if AI and human decisions were correct over time","Regular software updates","Employee satisfaction surveys"],correct:1,reason:"The Review Loop in HEAR requires tracking whether both AI recommendations and human override decisions led to good outcomes over time. This creates an evidence base for calibrating how much to trust the AI versus human judgment in specific decision types."},
+  {topic:2,q:"When an AI chatbot has 40% dissatisfaction rate, the most likely issue is:",opts:["Poor internet connection","Lack of human escalation paths","Outdated software","Too many features"],correct:1,reason:"Research on HR chatbot failure consistently points to lack of human escalation paths as the primary cause of dissatisfaction. Employees tolerate AI for simple queries but become frustrated when complex emotional or nuanced requests can't reach a human. Hybrid design is essential."},
+  {topic:2,q:"Guided AI workflows can increase accuracy by up to:",opts:["10%","25%","40%","60%"],correct:2,reason:"Studies show that guided AI workflows — where AI structures the process but humans make contextual judgments at key decision points — can increase decision accuracy by up to 40% compared to either fully human or fully automated approaches alone."},
+  {topic:3,q:"What does 'leadership atrophy' mean in the AI context?",opts:["Leaders getting tired of AI","Leaders losing judgment skills from over-relying on AI systems","AI replacing all leaders","Leaders refusing technology"],correct:1,reason:"Leadership atrophy is the gradual weakening of human judgment, empathy, and critical thinking as AI handles more decisions. Leaders who consistently defer to AI stop practising these essential skills — much like how GPS navigation has reduced our spatial reasoning ability."},
+  {topic:3,q:"Microsoft's market cap grew from $300B to what under Nadella's human-centered leadership?",opts:["$800B","$1.5T","$2.4T","$3.4T"],correct:3,reason:"Under Satya Nadella's transformation, Microsoft's market cap grew from approximately $300B in 2014 to over $3.4T by 2024 — making it the world's most valuable company at various points. This validates human-centered leadership as a core business value driver, not just an HR concept."},
+  {topic:3,q:"The EY AAA Framework stands for:",opts:["Assess, Align, Act","Augment, Adapt, Account","Automate, Analyse, Apply","Attract, Advance, Achieve"],correct:1,reason:"EY's AAA Framework for AI leadership is Assess (understand your AI landscape and risks), Align (connect AI strategy to human values and business purpose), and Act (implement with governance structures that keep humans accountable for AI outcomes)."},
+  {topic:3,q:"M-Kopa in Kenya uses AI for credit scoring but maintains human agents because:",opts:["AI is too expensive","Context like illness explains data patterns AI can't understand","Regulations require it","Customers prefer humans for all interactions"],correct:1,reason:"M-Kopa's insight is that AI sees payment patterns but can't understand context — a customer who misses payments may be dealing with illness, crop failure, or family crisis. Human agents provide the empathy and contextual judgment that transforms a potential default into a restructured plan, preserving the customer relationship."},
+  {topic:3,q:"'AI is a cultural mirror' means:",opts:["AI creates new cultures","AI reflects and amplifies existing organizational culture","AI only works in certain cultures","AI replaces cultural values"],correct:1,reason:"'AI is a cultural mirror' means AI doesn't create culture — it amplifies whatever culture already exists. Deploy AI in a transparent, trust-based culture and it accelerates performance. Deploy it in a surveillance-based culture and it deepens mistrust. Leaders must fix culture first."},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+const GRP_COLORS_MAP = {coral:"var(--coral)",mint:"var(--mint)",amber:"var(--amber)",sky:"var(--sky)",purple:"var(--purple)",pink:"var(--pink)"};
+const GRP_COLOR_KEYS = ["coral","mint","amber","sky","purple","pink"];
+const GRP_TAG_CLASSES = ["tag-coral","tag-mint","tag-amber","tag-sky","tag-purple","tag-pink"];
+
+let STATE = {
+  admin:{
+    password:"admin2026",
+    loggedIn:false,
+    features:{registration:true,openQuestions:true,peerMarking:true,mcq:true,individualQuiz:true,scoreboard:true},
+    mcqTimer:30 // seconds per question — admin configurable
+  },
+  groups:{},
+  currentView:"home",
+  sessionActive:false,
+  assignments:{},
+  answers:{},
+  individuals:{},
+  notifications:[], // { for: groupName, message, timestamp, read }
+  _activeGroup:null,
+  _markTarget:null,
+  _mcqIdx:0,
+  _indName:null,
+  _indMcqIdx:0
+};
+
+function save(){try{localStorage.setItem("rqa_state_v2",JSON.stringify(STATE));}catch(e){}}
+function load(){try{const s=JSON.parse(localStorage.getItem("rqa_state_v2"));if(s)STATE={...STATE,...s};}catch(e){}}
+load();
+
+// ═══════════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════════
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function getGroupColor(gName){const g=STATE.groups[gName];return g?GRP_COLORS_MAP[g.color]:"var(--coral)";}
+function getGroupTag(gName){const g=STATE.groups[gName];const idx=GRP_COLOR_KEYS.indexOf(g?.color);return GRP_TAG_CLASSES[idx>=0?idx:0];}
+function getGroupIdx(gName){return Object.keys(STATE.groups).indexOf(gName);}
+
+function toast(msg,type="info",duration=3200){
+  const el=document.createElement("div");
+  el.className=`toast ${type}`;
+  el.innerHTML=msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),duration);
+}
+
+function confetti(){
+  const colors=["#FF6B6B","#00E5A0","#FFB347","#4FC3F7","#B388FF","#FFD700","#FF6EC7"];
+  for(let i=0;i<60;i++){
+    const el=document.createElement("div");
+    el.className="confetti-piece";
+    el.style.cssText=`left:${Math.random()*100}vw;top:-20px;background:${colors[Math.floor(Math.random()*colors.length)]};transform:rotate(${Math.random()*360}deg);animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*.5}s;width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'2px'}`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),3500);
+  }
+}
+
+function addNotification(forGroup, message){
+  if(!STATE.notifications) STATE.notifications=[];
+  STATE.notifications.push({for:forGroup,message,timestamp:Date.now(),read:false});
+  save();
+}
+
+function getUnreadNotifications(group){
+  if(!STATE.notifications) return [];
+  return STATE.notifications.filter(n=>n.for===group&&!n.read);
+}
+
+function markNotificationsRead(group){
+  if(!STATE.notifications) return;
+  STATE.notifications.filter(n=>n.for===group).forEach(n=>n.read=true);
+  save();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// QUESTION ASSIGNMENT
+// ═══════════════════════════════════════════════════════════════
+function assignQuestions(){
+  const groups=Object.keys(STATE.groups);
+  if(groups.length<1)return;
+  const usedOpen=new Set();
+  const usedMcq=new Set();
+  STATE.assignments={};
+  STATE.answers={};
+  
+  // Build mark rotation (circular)
+  const markMap={};
+  groups.forEach((g,i)=>markMap[g]=groups[(i+1)%groups.length]);
+  
+  groups.forEach(g=>{
+    // 4 open questions — one per topic
+    const openQs=[];
+    for(let t=0;t<4;t++){
+      const pool=OPEN_QUESTIONS.map((q,i)=>({...q,idx:i})).filter(q=>q.topic===t&&!usedOpen.has(q.idx));
+      if(pool.length>0){const pick=pool[Math.floor(Math.random()*pool.length)];openQs.push(pick.idx);usedOpen.add(pick.idx);}
+    }
+    // 10 MCQs — randomized PER GROUP (each group gets different order)
+    const mcqPool=MCQ_BANK.map((q,i)=>({...q,idx:i})).filter(q=>!usedMcq.has(q.idx));
+    const mcqPick=shuffle(mcqPool).slice(0,10);
+    const mcqIdxs=mcqPick.map(m=>{usedMcq.add(m.idx);return m.idx;});
+    
+    STATE.assignments[g]={open:openQs,mcq:mcqIdxs,markGroup:markMap[g]};
+    STATE.answers[g]={
+      open:openQs.map(idx=>({qIdx:idx,answer:"",submitted:false,markedBy:"",score:null})),
+      mcq:mcqIdxs.map(idx=>({qIdx:idx,selected:null,correct:MCQ_BANK[idx].correct})),
+      mcqDone:false,openDone:false,currentOpenIdx:0
+    };
+  });
+  STATE.sessionActive=true;
+  save();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER ENGINE
+// ═══════════════════════════════════════════════════════════════
+const $=id=>document.getElementById(id);
+
+function render(){
+  const navEl=$("nav-tabs");
+  const indViews=["ind-register","ind-quiz","ind-result"];
+  const playViews=["group-hub","open-qs","mcq","peer-mark"];
+  
+  let tabs=[
+    {id:"home",label:"🏠 Home"},
+    {id:"register",label:"👥 Groups"},
+    {id:"play",label:"🎮 Play"},
+    {id:"individual",label:"👤 Solo"},
+    {id:"scoreboard",label:"🏆 Scores"},
+    {id:"admin",label:"⚙️ Admin"}
+  ];
+  
+  navEl.innerHTML=tabs.map(t=>{
+    const isActive=STATE.currentView===t.id
+      ||(playViews.includes(STATE.currentView)&&t.id==="play")
+      ||(indViews.includes(STATE.currentView)&&t.id==="individual");
+    return`<div class="tab ${isActive?"active":""}" onclick="navigate('${t.id}')">${t.label}</div>`;
+  }).join("");
+  
+  const area=$("screen-area");
+  area.innerHTML="";
+  const g=STATE._activeGroup;
+  
+  switch(STATE.currentView){
+    case "home": renderHome(area);break;
+    case "register": renderRegister(area);break;
+    case "play": renderPlay(area);break;
+    case "group-hub": g?renderGroupHub(area,g):renderPlay(area);break;
+    case "open-qs": g?renderOpenQs(area,g):renderPlay(area);break;
+    case "mcq": g?renderMcq(area,g):renderPlay(area);break;
+    case "peer-mark": g?renderPeerMark(area,g):renderPlay(area);break;
+    case "individual": renderIndividualHome(area);break;
+    case "ind-register": renderIndividualHome(area);break;
+    case "ind-quiz": renderIndQuiz(area);break;
+    case "ind-result": renderIndResult(area);break;
+    case "scoreboard": renderScoreboard(area);break;
+    case "admin": renderAdmin(area);break;
+    default: renderHome(area);
+  }
+}
+
+function navigate(view){STATE.currentView=view;render();}
+
+// ═══════════════════════════════════════════════════════════════
+// HOME
+// ═══════════════════════════════════════════════════════════════
+function renderHome(el){
+  const groups=Object.keys(STATE.groups);
+  const siteUrl=window.location.href.split("?")[0].split("#")[0];
+  el.innerHTML=`
+    <div class="card fade-in" style="text-align:center;margin-bottom:14px">
+      <h2 style="color:var(--wh);font-family:'Syne',sans-serif;font-size:22px;margin-bottom:6px">Welcome to the Session</h2>
+      <p style="font-size:13px;color:var(--dim);margin-bottom:14px">4 Topics · Create Your Group · Open Questions + Peer Marking + MCQs</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px">
+        ${TOPICS.map((t,i)=>`<span class="badge ${["tag-coral","tag-mint","tag-sky","tag-amber"][i]}">${t.split(":")[0]}</span>`).join("")}
+      </div>
+      <div class="qr-wrap">
+        <p style="font-size:12px;color:var(--dim);margin-bottom:2px">📱 Scan to join on your phone</p>
+        <div class="qr-container" id="qr-code-home"></div>
+        <div class="url-display" onclick="copyUrl()" id="url-display-btn" title="Click to copy">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+          <span id="url-text">${siteUrl.replace(/https?:\/\//,"")}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+        <button class="btn btn-sky" onclick="navigate('register')">👥 Create / Join Group</button>
+        ${STATE.sessionActive?`<button class="btn btn-mint" onclick="navigate('play')">🎮 Enter Session</button>`:""}
+        ${STATE.admin.features.scoreboard?`<button class="btn btn-ghost" onclick="navigate('scoreboard')">🏆 Live Scoreboard</button>`:""}
+        ${STATE.admin.features.individualQuiz?`<button class="btn btn-ghost" style="border-color:var(--purple);color:var(--purple)" onclick="navigate('individual')">👤 Solo Quiz</button>`:""}
+      </div>
+    </div>
+    ${groups.length>0?`
+    <div class="card fade-in">
+      <h3 style="color:var(--wh);font-size:15px;margin-bottom:12px">Registered Groups <span class="badge tag-mint">${groups.length} active</span></h3>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${groups.map((g,i)=>{
+          const grp=STATE.groups[g];
+          const notifs=getUnreadNotifications(g);
+          return`<div class="card2 group-${grp.color}" style="cursor:pointer" onclick="enterGroup('${g}')">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong style="color:var(--wh)">${g}</strong>
+              <div style="display:flex;align-items:center;gap:6px">
+                ${notifs.length>0?`<span class="badge tag-amber notify-bell">🔔 ${notifs.length} new</span>`:""}
+                <span class="badge ${GRP_TAG_CLASSES[GRP_COLOR_KEYS.indexOf(grp.color)||0]}">${grp.members.length} members</span>
+              </div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">
+              ${grp.members.map(m=>`<span class="member-chip">${m}</span>`).join("")}
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>`:""}
+  `;
+  setTimeout(()=>{
+    const qrEl=document.getElementById("qr-code-home");
+    if(qrEl&&qrEl.children.length===0){
+      try{new QRCode(qrEl,{text:siteUrl,width:160,height:160,colorDark:"#07090F",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});}
+      catch(e){qrEl.innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(siteUrl)}&color=07090F&bgcolor=ffffff" alt="QR" width="160" height="160" style="border-radius:8px"/>`;}
+    }
+  },100);
+}
+
+function copyUrl(){
+  const url=window.location.href.split("?")[0].split("#")[0];
+  navigator.clipboard.writeText(url).then(()=>{
+    const btn=$("url-display-btn");const orig=btn.innerHTML;
+    btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00E5A0" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span style="color:#00E5A0">Copied!</span>';
+    setTimeout(()=>{btn.innerHTML=orig;},2000);
+  }).catch(()=>{alert("URL: "+url);});
+}
+
+// ═══════════════════════════════════════════════════════════════
+// REGISTER — Users create their own groups
+// ═══════════════════════════════════════════════════════════════
+function renderRegister(el){
+  if(!STATE.admin.features.registration){el.innerHTML=`<div class="card" style="text-align:center"><p>Registration is currently disabled by admin.</p></div>`;return;}
+  const groups=Object.keys(STATE.groups);
+  const colors=GRP_COLOR_KEYS;
+  
+  el.innerHTML=`
+    <div class="card fade-in">
+      <h3 style="color:var(--wh);font-family:'Syne',sans-serif;font-size:20px;margin-bottom:4px">👥 Create or Join a Group</h3>
+      <p style="font-size:12px;color:var(--dim);margin-bottom:20px">Pick a group name, choose a color, add your members, then hit Create. Anyone can create up to 6 groups.</p>
+      
+      <!-- Create new group -->
+      <div class="card2" style="margin-bottom:20px;border:1px solid rgba(79,195,247,.15)">
+        <h4 style="color:var(--sky);font-size:14px;margin-bottom:14px">✨ Create a New Group</h4>
+        <label style="font-size:12px;color:var(--dim);display:block;margin-bottom:4px">Group Name</label>
+        <input id="new-group-name" placeholder="e.g. Team Phoenix, The Analysts..." maxlength="30" style="margin-bottom:10px"/>
+        <label style="font-size:12px;color:var(--dim);display:block;margin-bottom:6px">Pick a Color</label>
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap" id="color-picker">
+          ${colors.map((c,i)=>`
+            <div onclick="selectColor('${c}')" id="cp-${c}" style="width:36px;height:36px;border-radius:50%;background:${GRP_COLORS_MAP[c]};cursor:pointer;border:3px solid ${i===0?'#fff':'transparent'};transition:border .15s;box-shadow:0 2px 8px rgba(0,0,0,.3)" title="${c}"></div>
+          `).join("")}
+        </div>
+        <label style="font-size:12px;color:var(--dim);display:block;margin-bottom:4px">Member Names (comma separated)</label>
+        <input id="new-group-members" placeholder="Alice, Bob, Carol, David..." style="margin-bottom:14px"/>
+        <button class="btn btn-sky btn-full" onclick="createGroup()">🚀 Create Group</button>
+      </div>
+      
+      <!-- Existing groups -->
+      ${groups.length>0?`
+      <h4 style="color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Active Groups (${groups.length})</h4>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${groups.map((g,i)=>{
+          const grp=STATE.groups[g];
+          const ans=STATE.answers[g];
+          const mcqDone=ans?.mcqDone;
+          const openDone=ans?.open.every(o=>o.submitted);
+          return`<div class="card3 group-${grp.color}">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <strong style="color:var(--wh)">${g}</strong>
+                <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${grp.members.map(m=>`<span class="member-chip">${m}</span>`).join("")}</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+                ${mcqDone?`<span class="badge tag-mint">✓ MCQ done</span>`:""}
+                ${openDone?`<span class="badge tag-coral">✓ Open Qs done</span>`:""}
+                ${STATE.sessionActive?`<button class="btn btn-xs btn-ghost" onclick="enterGroup('${g}')">Enter →</button>`:""}
+              </div>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>`:""}
+      
+      ${groups.length>0&&!STATE.sessionActive?`
+      <div style="margin-top:16px;padding:14px;border-radius:12px;background:rgba(255,179,71,.06);border:1px solid rgba(255,179,71,.2)">
+        <p style="font-size:13px;color:var(--amber);margin-bottom:8px">⚡ ${groups.length} group${groups.length>1?"s":""} ready. Ask your facilitator to start the session from the Admin panel.</p>
+      </div>`:""}
+      
+      ${STATE.sessionActive?`
+      <div style="margin-top:14px;text-align:center">
+        <button class="btn btn-mint" onclick="navigate('play')">🎮 Session is Live — Join Now →</button>
+      </div>`:""}
+    </div>
+  `;
+  
+  // set default color selection
+  STATE._newGroupColor = STATE._newGroupColor || colors[0];
+  highlightColorPicker(STATE._newGroupColor);
+}
+
+let _selectedColor = "coral";
+function selectColor(c){
+  _selectedColor=c;
+  GRP_COLOR_KEYS.forEach(k=>{
+    const el=document.getElementById("cp-"+k);
+    if(el) el.style.border=`3px solid ${k===c?"#fff":"transparent"}`;
+  });
+}
+
+function createGroup(){
+  const nameEl=$("new-group-name");
+  const membersEl=$("new-group-members");
+  if(!nameEl||!membersEl)return;
+  const name=nameEl.value.trim();
+  const members=membersEl.value.split(",").map(m=>m.trim()).filter(m=>m.length>0);
+  if(!name){toast("⚠️ Please enter a group name","warning");return;}
+  if(members.length<1){toast("⚠️ Add at least one member name","warning");return;}
+  if(STATE.groups[name]){toast("⚠️ A group with that name already exists","warning");return;}
+  if(Object.keys(STATE.groups).length>=6){toast("⚠️ Maximum 6 groups allowed","warning");return;}
+  
+  const usedColors=Object.values(STATE.groups).map(g=>g.color);
+  const availColor=GRP_COLOR_KEYS.find(c=>!usedColors.includes(c))||_selectedColor;
+  const color=_selectedColor&&!usedColors.includes(_selectedColor)?_selectedColor:availColor;
+  
+  STATE.groups[name]={members,color};
+  save();
+  toast(`🎉 ${name} created with ${members.length} member${members.length>1?"s":""}!`,"success");
+  render();
+}
+
+function highlightColorPicker(c){
+  GRP_COLOR_KEYS.forEach(k=>{
+    const el=document.getElementById("cp-"+k);
+    if(el) el.style.border=`3px solid ${k===c?"#fff":"transparent"}`;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ADMIN
+// ═══════════════════════════════════════════════════════════════
+function renderAdmin(el){
+  if(!STATE.admin.loggedIn){
+    el.innerHTML=`
+      <div class="card fade-in" style="max-width:400px;margin:0 auto;text-align:center">
+        <h3 style="color:var(--wh);font-family:'Syne',sans-serif;margin-bottom:12px">🔐 Admin Panel</h3>
+        <input id="admin-pw" type="password" placeholder="Enter admin password" style="margin-bottom:12px"/>
+        <button class="btn btn-coral btn-full" onclick="adminLogin()">Login</button>
+        <p style="font-size:11px;color:var(--dim);margin-top:8px">Default: admin2026</p>
+      </div>`;
+    return;
+  }
+  const groups=Object.keys(STATE.groups);
+  const feats=STATE.admin.features;
+  const timerVal=STATE.admin.mcqTimer||30;
+  
+  el.innerHTML=`
+    <div class="card fade-in">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3 style="color:var(--wh);font-family:'Syne',sans-serif;font-size:20px">⚙️ Admin Console</h3>
+        <button class="btn btn-sm btn-ghost" onclick="adminLogout()">Logout</button>
+      </div>
+      
+      <!-- Timer Control -->
+      <div style="margin-bottom:20px">
+        <h4 style="color:var(--amber);font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">⏱ MCQ Timer Per Question</h4>
+        <div class="card2" style="border:1px solid rgba(255,179,71,.2)">
+          <p style="font-size:12px;color:var(--dim);margin-bottom:10px">How many seconds participants get per MCQ question. Lower = more intense!</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+            ${[10,15,20,30,45,60,90,120].map(t=>`<button class="btn btn-sm ${timerVal===t?"btn-amber":"btn-ghost"}" onclick="setTimer(${t})">${t}s${t<=15?" 🔥":t<=30?" ⚡":""}</button>`).join("")}
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <input type="number" id="custom-timer" min="5" max="300" placeholder="Custom (5-300s)" style="max-width:180px"/>
+            <button class="btn btn-sm btn-amber" onclick="setCustomTimer()">Set Custom</button>
+          </div>
+          <div style="margin-top:10px;padding:10px;background:rgba(255,179,71,.06);border-radius:8px;font-size:12px;color:var(--amber)">
+            Current: <strong>${timerVal} seconds per question</strong>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Feature Toggles -->
+      <h4 style="color:var(--dim);font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Feature Controls</h4>
+      ${Object.entries(feats).map(([k,v])=>`
+        <div class="admin-toggle">
+          <div class="toggle ${v?"on":""}" onclick="toggleFeature('${k}')"></div>
+          <div>
+            <span style="font-size:13px;color:var(--tx)">${k.replace(/([A-Z])/g," $1").replace(/^./,s=>s.toUpperCase())}</span>
+            <span style="font-size:11px;color:var(--dim);margin-left:8px">${v?"Enabled":"Disabled"}</span>
+          </div>
+        </div>
+      `).join("")}
+      
+      <!-- Session Controls -->
+      <div style="margin-top:20px">
+        <h4 style="color:var(--dim);font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Session Controls</h4>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${groups.length>0&&!STATE.sessionActive?`<button class="btn btn-mint" onclick="startSession()">🚀 Start Session & Assign Questions</button>`:""}
+          ${STATE.sessionActive?`<span class="live-badge"><span class="live-dot"></span>Session Live</span>`:""}
+          <button class="btn btn-ghost" onclick="navigate("scoreboard")">🏆 Scoreboard</button>
+          <button class="btn btn-coral" onclick="resetAll()">🗑️ Reset Everything</button>
+        </div>
+      </div>
+      
+      <!-- Groups overview -->
+      ${STATE.sessionActive&&groups.length>0?`
+      <div style="margin-top:20px">
+        <h4 style="color:var(--dim);font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Group Assignments</h4>
+        ${groups.map(g=>{
+          const a=STATE.assignments[g];if(!a)return"";
+          return`<div class="card2 group-${STATE.groups[g].color}" style="margin-bottom:6px">
+            <strong style="color:var(--wh)">${g}</strong>
+            <span style="color:var(--dim);font-size:12px"> → Peer-marked by: <strong style="color:var(--sky)">${a.markGroup}</strong></span>
+            <div style="font-size:11px;color:var(--dim);margin-top:3px">${a.open.length} open Qs · ${a.mcq.length} MCQs</div>
+          </div>`;
+        }).join("")}
+      </div>`:""}
+    </div>
+  `;
+}
+
+function adminLogin(){const pw=$("admin-pw").value;if(pw===STATE.admin.password){STATE.admin.loggedIn=true;save();render();}else{toast("❌ Incorrect password","warning");}}
+function adminLogout(){STATE.admin.loggedIn=false;save();render();}
+function toggleFeature(key){STATE.admin.features[key]=!STATE.admin.features[key];save();render();}
+function setTimer(t){STATE.admin.mcqTimer=t;save();render();toast(`⏱ Timer set to ${t} seconds`,"success");}
+function setCustomTimer(){const v=parseInt($("custom-timer")?.value);if(v>=5&&v<=300){setTimer(v);}else{toast("⚠️ Enter a value between 5 and 300","warning");}}
+function startSession(){if(Object.keys(STATE.groups).length<1){toast("⚠️ Create at least 1 group first","warning");return;}assignQuestions();toast("🚀 Session started! Groups can now begin.","success");render();}
+function resetAll(){if(!confirm("Delete ALL data? This cannot be undone."))return;localStorage.removeItem("rqa_state_v2");location.reload();}
+
+// ═══════════════════════════════════════════════════════════════
+// PLAY — Group selection
+// ═══════════════════════════════════════════════════════════════
+function renderPlay(el){
+  if(!STATE.sessionActive){
+    el.innerHTML=`<div class="card" style="text-align:center">
+      <p style="margin-bottom:12px;font-size:15px;color:var(--tx)">Session hasn't started yet.</p>
+      <p style="color:var(--dim);font-size:13px;margin-bottom:16px">Ask the facilitator/admin to start the session, or create a group first.</p>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-sky" onclick="navigate('register')">👥 Create a Group</button>
+        <button class="btn btn-ghost" onclick="navigate('home')">← Home</button>
+      </div>
+    </div>`;
+    return;
+  }
+  const groups=Object.keys(STATE.groups);
+  el.innerHTML=`
+    <div class="card fade-in">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+        <span class="live-dot"></span>
+        <h3 style="color:var(--wh);font-size:18px;font-family:'Syne',sans-serif">Session is Live!</h3>
+        <span class="live-badge">LIVE</span>
+      </div>
+      <p style="color:var(--dim);font-size:13px;margin-bottom:16px">Select your group to enter the session.</p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${groups.map(g=>{
+          const grp=STATE.groups[g];
+          const ans=STATE.answers[g];
+          const notifs=getUnreadNotifications(g);
+          const mcqDone=ans?.mcqDone;
+          const openDone=ans?.open.every(o=>o.submitted);
+          const progress=((mcqDone?1:0)+(openDone?1:0))/2*100;
+          return`<button class="btn btn-full group-${grp.color}" style="background:var(--card2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:18px 20px;text-align:left;display:flex;justify-content:space-between;align-items:center" onclick="enterGroup('${g}')">
+            <div>
+              <div style="font-size:16px;font-weight:700;color:var(--wh);margin-bottom:2px">${g}</div>
+              <div style="font-size:11px;color:var(--dim)">${grp.members.length} members</div>
+              <div class="score-bar" style="width:120px;margin-top:6px"><div class="score-fill" style="width:${progress}%;background:${GRP_COLORS_MAP[grp.color]}"></div></div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              ${notifs.length>0?`<span class="badge tag-amber">🔔 ${notifs.length}</span>`:""}
+              ${mcqDone?`<span class="badge tag-mint" style="font-size:10px">MCQ ✓</span>`:""}
+              ${openDone?`<span class="badge tag-coral" style="font-size:10px">Open ✓</span>`:""}
+              <span style="font-size:18px;color:var(--sky)">→</span>
+            </div>
+          </button>`;
+        }).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function enterGroup(groupName){
+  STATE._activeGroup=groupName;
+  markNotificationsRead(groupName);
+  STATE.currentView="group-hub";
+  render();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GROUP HUB
+// ═══════════════════════════════════════════════════════════════
+function renderGroupHub(el,group){
+  const a=STATE.assignments[group];
+  const ans=STATE.answers[group];
+  const feats=STATE.admin.features;
+  const grp=STATE.groups[group];
+  if(!a||!ans){el.innerHTML=`<div class="card"><p>No assignments found. Session may not have started yet.</p><button class="btn btn-ghost" style="margin-top:12px" onclick="navigate('play')">Back</button></div>`;return;}
+  
+  const openAnswered=ans.open.filter(o=>o.submitted).length;
+  const mcqAnswered=ans.mcq.filter(m=>m.selected!==null).length;
+  const openDone=ans.openDone||ans.open.every(o=>o.submitted);
+  
+  const markForGroup=Object.entries(STATE.assignments).find(([g,ass])=>ass.markGroup===group);
+  const hasMarking=markForGroup&&STATE.answers[markForGroup[0]]?.open.some(o=>o.submitted&&o.score===null);
+  
+  // Check if open questions just completed to send notification to marker group
+  if(openDone&&!ans._notifiedMarker){
+    const markerGroup=a.markGroup;
+    addNotification(markerGroup,`📝 ${group} has completed their open questions — your peer marking task is ready!`);
+    ans._notifiedMarker=true;
+    save();
+  }
+  
+  el.innerHTML=`
+    <div class="card fade-in">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div>
+          <h3 style="color:var(--wh);font-family:'Syne',sans-serif;font-size:20px">${group}</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${grp.members.map(m=>`<span class="member-chip">${m}</span>`).join("")}</div>
+        </div>
+        <button class="btn btn-sm btn-ghost" onclick="navigate('play')">← Back</button>
+      </div>
+      
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${feats.openQuestions?`
+        <div class="card2 group-coral">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <strong style="color:var(--wh)">📝 Open Questions</strong>
+              <div style="font-size:12px;color:var(--dim)">${openAnswered}/4 answered · 5 pts each (peer-marked)</div>
+            </div>
+            <button class="btn btn-sm btn-coral" onclick="startOpenQs('${group}')">${openDone?"Review":"${openAnswered>0?'Continue':'Start'}"}</button>
+          </div>
+          <div class="progress-ring">${[0,1,2,3].map(i=>`<div class="dot ${i<openAnswered?"done":i===openAnswered?"current":""}">${i<openAnswered?"✓":i+1}</div>`).join("")}</div>
+        </div>`:""}
+        
+        ${feats.mcq?`
+        <div class="card2 group-sky">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <strong style="color:var(--wh)">📊 MCQ Quiz</strong>
+              <div style="font-size:12px;color:var(--dim)">${mcqAnswered}/10 answered · ⏱ ${STATE.admin.mcqTimer||30}s per question</div>
+            </div>
+            <button class="btn btn-sm btn-sky" onclick="startMcq('${group}')">${ans.mcqDone?"Review":"${mcqAnswered>0?'Continue':'Start'}"}</button>
+          </div>
+          <div class="score-bar"><div class="score-fill" style="width:${mcqAnswered*10}%;background:var(--sky)"></div></div>
+        </div>`:""}
+        
+        ${feats.peerMarking&&hasMarking?`
+        <div class="card2 group-amber" style="border:1px solid rgba(255,179,71,.3);background:rgba(255,179,71,.05)">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <strong style="color:var(--amber)">⭐ Peer Marking Available!</strong>
+              <div style="font-size:12px;color:var(--dim)">Mark ${markForGroup[0]}'s open answers</div>
+            </div>
+            <button class="btn btn-sm btn-amber" onclick="startPeerMark('${group}','${markForGroup[0]}')">Mark Now →</button>
+          </div>
+        </div>`:""}
+        
+        ${feats.peerMarking&&markForGroup&&!hasMarking&&STATE.answers[markForGroup[0]]?.open.some(o=>o.submitted)?`
+        <div class="card2" style="border:1px solid rgba(0,229,160,.15)">
+          <strong style="color:var(--mint)">✅ Peer Marking Complete!</strong>
+          <div style="font-size:12px;color:var(--dim);margin-top:3px">You've marked all of ${markForGroup[0]}'s answers.</div>
+        </div>`:""}
+        
+        <button class="btn btn-ghost btn-full" onclick="navigate('scoreboard')">🏆 Live Scoreboard</button>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// OPEN QUESTIONS
+// ═══════════════════════════════════════════════════════════════
+function startOpenQs(group){STATE._activeGroup=group;STATE.currentView="open-qs";render();}
+
+function renderOpenQs(el,group){
+  const ans=STATE.answers[group];
+  const currentIdx=ans.currentOpenIdx||0;
+  
+  if(currentIdx>=4||ans.open.every(o=>o.submitted)){
+    el.innerHTML=`
+      <div class="card fade-in">
+        <div style="text-align:center;margin-bottom:16px">
+          <div style="font-size:48px">✅</div>
+          <h3 style="color:var(--wh);font-family:'Syne',sans-serif;margin-top:6px">All Questions Submitted!</h3>
+          <p style="color:var(--dim);font-size:13px;margin-top:6px">Your answers have been sent to another group for peer marking.</p>
+        </div>
+        ${ans.open.map((o,i)=>{
+          const q=OPEN_QUESTIONS[o.qIdx];
+          return`<div class="card2" style="margin-bottom:8px">
+            <div style="display:flex;gap:6px;margin-bottom:6px"><span class="badge ${["tag-coral","tag-mint","tag-sky","tag-amber"][q.topic]}">${TOPICS[q.topic].split(":")[0]}</span><span class="badge tag-purple">${q.level}</span></div>
+            <p style="color:var(--tx);font-size:13px;margin-bottom:6px">${q.q}</p>
+            <div style="background:var(--slate);padding:10px;border-radius:8px;font-size:12px;color:var(--dim)">${o.answer}</div>
+            ${o.score!==null?`<div style="margin-top:6px;font-weight:700;color:var(--mint)">Score: ${o.score}/5 ⭐</div>`:`<div style="margin-top:6px;font-size:11px;color:var(--amber)">⏳ Awaiting peer marking</div>`}
+          </div>`;
+        }).join("")}
+        <button class="btn btn-ghost btn-full" style="margin-top:12px" onclick="enterGroup('${group}')">← Back to Hub</button>
+      </div>`;
+    return;
+  }
+  
+  const oq=ans.open[currentIdx];
+  const q=OPEN_QUESTIONS[oq.qIdx];
+  
+  el.innerHTML=`
+    <div class="card fade-in">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge ${["tag-coral","tag-mint","tag-sky","tag-amber"][q.topic]}">${TOPICS[q.topic].split(":")[0]}</span>
+          <span class="badge tag-purple">${q.level}</span>
+        </div>
+        <span style="color:var(--dim);font-size:12px">Q${currentIdx+1} of 4</span>
+      </div>
+      <div class="progress-ring" style="margin-bottom:14px">${[0,1,2,3].map(i=>`<div class="dot ${i<currentIdx?"done":i===currentIdx?"current":""}">${i<currentIdx?"✓":i+1}</div>`).join("")}</div>
+      <p style="color:var(--wh);font-size:16px;line-height:1.65;margin-bottom:16px">${q.q}</p>
+      <textarea id="open-answer" placeholder="Type your group's answer here... Be specific and reference frameworks from the session." style="min-height:140px;margin-bottom:12px">${oq.answer}</textarea>
+      <button class="btn btn-coral btn-full" onclick="submitOpenAnswer('${group}',${currentIdx})">Submit & Continue →</button>
+      <p style="font-size:11px;color:var(--dim);margin-top:8px;text-align:center">Once submitted, your answer is sent to another group for peer marking (5 pts max).</p>
+    </div>`;
+}
+
+function submitOpenAnswer(group,idx){
+  const answer=($("open-answer")?.value||"").trim();
+  if(answer.length<20){toast("⚠️ Please write at least 20 characters","warning");return;}
+  STATE.answers[group].open[idx].answer=answer;
+  STATE.answers[group].open[idx].submitted=true;
+  STATE.answers[group].currentOpenIdx=idx+1;
+  const allDone=STATE.answers[group].open.every(o=>o.submitted);
+  if(allDone){STATE.answers[group].openDone=true;}
+  save();render();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MCQ — WITH TIMER + RANDOMIZED OPTIONS + REASONS
+// ═══════════════════════════════════════════════════════════════
+let _mcqTimerInterval=null;
+
+function startMcq(group){
+  STATE._activeGroup=group;
+  STATE.currentView="mcq";
+  const ans=STATE.answers[group];
+  const first=ans.mcq.findIndex(m=>m.selected===null);
+  STATE._mcqIdx=first>=0?first:0;
+  save();render();
+}
+
+function renderMcq(el,group){
+  const ans=STATE.answers[group];
+  
+  if(ans.mcqDone){
+    // Clear any running timer
+    if(_mcqTimerInterval){clearInterval(_mcqTimerInterval);_mcqTimerInterval=null;}
+    const correct=ans.mcq.filter(m=>m.selected===m.correct).length;
+    const emoji=correct>=9?"🏆":correct>=7?"🌟":correct>=5?"💡":correct>=3?"📚":"🔍";
+    el.innerHTML=`
+      <div class="card fade-in" style="text-align:center">
+        <div style="font-size:52px;margin-bottom:6px">${emoji}</div>
+        <h3 style="color:var(--wh);font-family:'Syne',sans-serif;font-size:22px;margin-bottom:4px">MCQ Complete!</h3>
+        <div class="big-stat" style="color:var(--sky);margin:10px 0">${correct}<span style="font-size:24px;color:var(--dim)">/10</span></div>
+        <p style="color:var(--tx);font-size:14px;margin-bottom:20px">${correct>=8?"Excellent!":correct>=6?"Well done!":correct>=4?"Good effort!":"Keep studying!"}</p>
+        <div style="text-align:left;margin-bottom:16px">
+          ${ans.mcq.map((m,i)=>{
+            const q=MCQ_BANK[m.qIdx];
+            const correct2=m.selected===m.correct;
+            return`<div class="card2" style="margin-bottom:8px;border-left:3px solid ${correct2?"var(--mint)":"var(--coral)"}">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                <p style="font-size:12px;color:var(--tx);flex:1">${i+1}. ${q.q}</p>
+                <span style="font-size:18px;flex-shrink:0">${correct2?"✓":"✗"}</span>
+              </div>
+              <div style="font-size:11px;margin-top:4px">
+                ${m.selected!==null?`<span style="color:${correct2?"var(--mint)":"var(--coral)"}">Your answer: ${q.opts[m.selected]}</span>`:"<span style='color:var(--dim)'>No answer (timed out)</span>"}
+                ${!correct2?`<span style="color:var(--dim)"> → Correct: <strong style="color:var(--mint)">${q.opts[q.correct]}</strong></span>`:""}
+              </div>
+              <div style="font-size:11px;color:var(--dim);margin-top:5px;line-height:1.5">💡 ${q.reason}</div>
+            </div>`;
+          }).join("")}
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" style="flex:1" onclick="enterGroup('${group}')">← Back to Hub</button>
+          <button class="btn btn-sky" style="flex:1" onclick="navigate('scoreboard')">🏆 Scoreboard</button>
+        </div>
+      </div>`;
+    return;
+  }
+  
+  const idx=STATE._mcqIdx;
+  if(idx>=10){ans.mcqDone=true;save();renderMcq(el,group);return;}
+  
+  const m=ans.mcq[idx];
+  const q=MCQ_BANK[m.qIdx];
+  const timerMax=STATE.admin.mcqTimer||30;
+  
+  // Each group gets shuffled option ORDER per question (randomized presentation)
+  // But we store the mapping so scoring still works
+  if(!m.shuffleMap){
+    const map=shuffle([0,1,2,3]);
+    m.shuffleMap=map; // map[displayIdx] = originalIdx
+    save();
+  }
+  const smap=m.shuffleMap;
+  const answered=m.selected!==null||m.timedOut;
+  
+  el.innerHTML=`
+    <div class="card fade-in">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span class="badge ${["tag-coral","tag-mint","tag-sky","tag-amber"][q.topic]}">${TOPICS[q.topic].split(":")[0]}</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span id="timer-display" style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--amber)">${timerMax}</span>
+          <span style="color:var(--dim);font-size:12px">${idx+1}/10</span>
+        </div>
+      </div>
+      
+      <!-- Timer bar -->
+      <div class="timer-bar">
+        <div id="timer-fill" class="timer-fill" style="width:100%;background:linear-gradient(90deg,var(--mint),var(--amber))"></div>
+      </div>
+      
+      <div class="score-bar" style="margin-bottom:14px">
+        <div class="score-fill" style="width:${idx*10}%;background:var(--sky)"></div>
+      </div>
+      
+      <p style="color:var(--wh);font-size:15px;line-height:1.55;margin-bottom:16px;font-weight:500">${q.q}</p>
+      
+      ${smap.map((origIdx,di)=>{
+        let cls="mcq-option";
+        if(answered){
+          if(origIdx===q.correct)cls+=" correct";
+          else if(m.selected===origIdx&&origIdx!==q.correct)cls+=" wrong";
+        }
+        const letter=String.fromCharCode(65+di);
+        return`<button class="${cls}" ${answered?"disabled":""} onclick="selectMcq('${group}',${idx},${origIdx})">
+          <span class="opt-letter">${letter}</span>${q.opts[origIdx]}
+        </button>`;
+      }).join("")}
+      
+      ${answered?`
+        <div class="reason-box">
+          <strong>💡 Why ${m.timedOut?"the correct answer is: "+q.opts[q.correct]:"this is correct"}:</strong><br>${q.reason}
+        </div>
+        <button class="btn btn-sky btn-full" style="margin-top:12px" onclick="nextMcq('${group}')">${idx<9?"Next Question →":"See Results 🏁"}</button>
+      `:""}
+    </div>
+  `;
+  
+  // Start timer if not answered
+  if(!answered){
+    if(_mcqTimerInterval)clearInterval(_mcqTimerInterval);
+    let remaining=timerMax;
+    const fillEl=()=>document.getElementById("timer-fill");
+    const dispEl=()=>document.getElementById("timer-display");
+    
+    _mcqTimerInterval=setInterval(()=>{
+      remaining--;
+      const pct=(remaining/timerMax)*100;
+      const fe=fillEl();const de=dispEl();
+      if(fe){
+        fe.style.width=pct+"%";
+        if(remaining<=5){fe.classList.add("urgent");fe.style.background="var(--coral)";}
+        else if(remaining<=timerMax*0.4){fe.style.background="linear-gradient(90deg,var(--amber),var(--coral))";}
+      }
+      if(de){
+        de.textContent=remaining;
+        if(remaining<=5)de.style.color="var(--coral)";
+      }
+      if(remaining<=0){
+        clearInterval(_mcqTimerInterval);_mcqTimerInterval=null;
+        // Time's up — mark as timed out, no selection
+        STATE.answers[group].mcq[idx].timedOut=true;
+        save();render();
+        toast("⏰ Time's up! Moving on...","warning",1800);
+      }
+    },1000);
+  } else {
+    if(_mcqTimerInterval){clearInterval(_mcqTimerInterval);_mcqTimerInterval=null;}
+  }
+}
+
+function selectMcq(group,qIdx,origOptIdx){
+  if(_mcqTimerInterval){clearInterval(_mcqTimerInterval);_mcqTimerInterval=null;}
+  STATE.answers[group].mcq[qIdx].selected=origOptIdx;
+  // Recalculate correct based on original indices
+  const q=MCQ_BANK[STATE.answers[group].mcq[qIdx].qIdx];
+  STATE.answers[group].mcq[qIdx].correct=q.correct;
+  save();render();
+}
+
+function nextMcq(group){
+  STATE._mcqIdx=(STATE._mcqIdx||0)+1;
+  if(STATE._mcqIdx>=10){STATE.answers[group].mcqDone=true;confetti();}
+  save();render();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PEER MARKING — With notification when done
+// ═══════════════════════════════════════════════════════════════
+function startPeerMark(markerGroup,targetGroup){
+  STATE._activeGroup=markerGroup;
+  STATE._markTarget=targetGroup;
+  STATE.currentView="peer-mark";
+  render();
+}
+
+function renderPeerMark(el,markerGroup){
+  const target=STATE._markTarget;
+  const ans=STATE.answers[target];
+  if(!ans){el.innerHTML=`<div class="card"><p>No answers to mark yet.</p></div>`;return;}
+  
+  const toMark=ans.open.filter(o=>o.submitted&&o.score===null);
+  
+  if(toMark.length===0){
+    // Notify the target group their marks are in
+    if(!ans._notifiedScored){
+      addNotification(target,`⭐ ${markerGroup} has finished marking your answers! Check your scores.`);
+      ans._notifiedScored=true;
+      save();
+    }
+    el.innerHTML=`
+      <div class="card fade-in" style="text-align:center">
+        <div style="font-size:52px;margin-bottom:8px">⭐</div>
+        <h3 style="color:var(--wh);font-family:'Syne',sans-serif;margin-bottom:8px">All Marked!</h3>
+        <p style="color:var(--dim);font-size:13px;margin-bottom:16px">${target} has been notified that their scores are ready.</p>
+        <button class="btn btn-ghost" onclick="enterGroup('${markerGroup}')">← Back to Hub</button>
+      </div>`;
+    return;
+  }
+  
+  const item=toMark[0];
+  const q=OPEN_QUESTIONS[item.qIdx];
+  const markedSoFar=ans.open.filter(o=>o.submitted&&o.score!==null).length;
+  const total=ans.open.filter(o=>o.submitted).length;
+  
+  el.innerHTML=`
+    <div class="card fade-in">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div>
+          <span class="badge tag-amber">⭐ Peer Marking</span>
+          <span style="color:var(--dim);font-size:12px;margin-left:6px">You're marking ${target}'s work</span>
+        </div>
+        <span style="color:var(--dim);font-size:12px">${markedSoFar}/${total} done</span>
+      </div>
+      
+      <div class="score-bar" style="margin-bottom:14px">
+        <div class="score-fill" style="width:${(markedSoFar/total)*100}%;background:var(--amber)"></div>
+      </div>
+      
+      <div style="margin-bottom:12px">
+        <span class="badge ${["tag-coral","tag-mint","tag-sky","tag-amber"][q.topic]}">${TOPICS[q.topic].split(":")[0]}</span>
+        <span class="badge tag-purple">${q.level}</span>
+      </div>
+      <p style="color:var(--wh);font-size:14px;line-height:1.55;margin-bottom:12px"><strong>Question:</strong> ${q.q}</p>
+      <div style="background:var(--slate);padding:14px;border-radius:12px;margin-bottom:16px;border-left:3px solid var(--amber)">
+        <p style="font-size:11px;color:var(--amber);margin-bottom:6px;font-weight:600">THEIR ANSWER:</p>
+        <p style="color:var(--tx);font-size:14px;line-height:1.65">${item.answer}</p>
+      </div>
+      <div style="text-align:center;margin-bottom:12px">
+        <p style="font-size:13px;color:var(--wh);margin-bottom:10px;font-weight:600">Award a score (0–5 points):</p>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-width:360px;margin:0 auto">
+          ${[0,1,2,3,4,5].map(s=>`<button class="btn ${s>=4?"btn-mint":s>=2?"btn-amber":"btn-coral"}" style="padding:0;height:52px;font-size:20px;font-weight:800;border-radius:12px" onclick="submitPeerMark('${markerGroup}','${target}',${item.qIdx},${s})">${s}</button>`).join("")}
+        </div>
+        <p style="font-size:11px;color:var(--dim);margin-top:8px">0 = No attempt &nbsp;·&nbsp; 1-2 = Partial &nbsp;·&nbsp; 3 = Good &nbsp;·&nbsp; 4 = Very Good &nbsp;·&nbsp; 5 = Excellent</p>
+      </div>
+    </div>`;
+}
+
+function submitPeerMark(markerGroup,targetGroup,qIdx,score){
+  const ans=STATE.answers[targetGroup];
+  const item=ans.open.find(o=>o.qIdx===qIdx);
+  if(item){item.score=score;item.markedBy=markerGroup;}
+  save();render();
+  toast(`✅ Score of ${score}/5 submitted!`,"success",2000);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SCOREBOARD — Always visible, live, animated
+// ═══════════════════════════════════════════════════════════════
+function renderScoreboard(el){
+  if(!STATE.admin.features.scoreboard){el.innerHTML=`<div class="card" style="text-align:center"><p>Scoreboard is currently disabled.</p></div>`;return;}
+  
+  const groups=Object.keys(STATE.groups);
+  const scores=groups.map(g=>{
+    const ans=STATE.answers[g];
+    if(!ans)return{name:g,open:0,mcq:0,total:0,color:STATE.groups[g]?.color||"coral"};
+    const openScore=ans.open.reduce((s,o)=>s+(o.score||0),0);
+    const mcqScore=ans.mcq.filter(m=>m.selected===m.correct).length;
+    return{name:g,open:openScore,mcq:mcqScore,total:openScore+mcqScore,color:STATE.groups[g]?.color||"coral"};
+  }).sort((a,b)=>b.total-a.total);
+  
+  const indDone=Object.values(STATE.individuals).filter(i=>i.done);
+  
+  el.innerHTML=`
+    <div class="card fade-in">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:40px;margin-bottom:4px">🏆</div>
+        <h3 style="color:var(--wh);font-family:'Syne',sans-serif;font-size:24px;margin-bottom:4px">Live Scoreboard</h3>
+        <div style="display:flex;justify-content:center;align-items:center;gap:6px">
+          <span class="live-dot"></span>
+          <span class="live-badge">LIVE</span>
+          <span style="color:var(--dim);font-size:12px">Updates in real-time</span>
+        </div>
+      </div>
+      
+      ${scores.length===0?`<p style="text-align:center;color:var(--dim)">No groups registered yet.</p>`:`
+      <!-- Header row -->
+      <div class="sb-row" style="margin-bottom:6px">
+        <div style="font-size:10px;color:var(--dim)">#</div>
+        <div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px">Group</div>
+        <div style="font-size:10px;color:var(--dim);text-align:center;text-transform:uppercase;letter-spacing:1px">Open</div>
+        <div style="font-size:10px;color:var(--dim);text-align:center;text-transform:uppercase;letter-spacing:1px">MCQ</div>
+        <div style="font-size:10px;color:var(--dim);text-align:center;text-transform:uppercase;letter-spacing:1px">Total</div>
+      </div>
+      
+      ${scores.map((s,i)=>{
+        const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":"";
+        const bg=i===0?"rgba(255,215,0,.06)":i%2===0?"rgba(255,255,255,.02)":"transparent";
+        const topBorder=i===0?";border:1px solid rgba(255,215,0,.15)":"";
+        const maxPossible=30;
+        return`<div class="sb-row fade-in" style="background:${bg};border-radius:12px${topBorder};animation-delay:${i*0.08}s">
+          <div style="font-size:${i<3?"22":"14"}px;text-align:center">${medal||i+1}</div>
+          <div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="width:10px;height:10px;border-radius:50%;background:${GRP_COLORS_MAP[s.color]};flex-shrink:0"></div>
+              <strong style="color:${i===0?"var(--gold)":"var(--wh)"};font-size:${i===0?15:14}px">${s.name}</strong>
+            </div>
+            <div class="score-bar" style="width:100%;margin-top:4px">
+              <div class="score-fill" style="width:${(s.total/maxPossible)*100}%;background:${GRP_COLORS_MAP[s.color]}"></div>
+            </div>
+          </div>
+          <div style="text-align:center;font-weight:700;color:var(--coral)">${s.open}<span style="color:var(--dim);font-size:10px">/20</span></div>
+          <div style="text-align:center;font-weight:700;color:var(--sky)">${s.mcq}<span style="color:var(--dim);font-size:10px">/10</span></div>
+          <div style="text-align:center;font-family:'Syne',sans-serif;font-weight:800;font-size:${i===0?22:18}px;color:${i===0?"var(--gold)":i===1?"var(--tx)":"var(--tx)"}">${s.total}</div>
+        </div>`;
+      }).join("")}
+      
+      <div style="margin-top:12px;padding:10px;background:var(--card2);border-radius:10px;font-size:11px;color:var(--dim);text-align:center">
+        Max points: Open Questions 20 pts + MCQ 10 pts = <strong style="color:var(--tx)">30 pts total</strong>
+      </div>`}
+    </div>
+    
+    ${indDone.length>0?`
+    <div class="card fade-in" style="margin-top:14px">
+      <div style="text-align:center;margin-bottom:16px">
+        <h3 style="color:var(--wh);font-family:'Syne',sans-serif;font-size:20px;margin-bottom:4px">👤 Individual Leaderboard</h3>
+        <p style="color:var(--dim);font-size:12px">${indDone.length} participants completed · 5 MCQs each</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        ${Object.entries(STATE.individuals).filter(([n,d])=>d.done).sort((a,b)=>b[1].score-a[1].score).slice(0,20).map(([name,data],i)=>{
+          const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":"";
+          const bg=i===0?"rgba(255,215,0,.06)":i%2===0?"rgba(255,255,255,.02)":"transparent";
+          const scoreCol=data.score>=4?"var(--mint)":data.score>=3?"var(--sky)":data.score>=2?"var(--amber)":"var(--coral)";
+          return`<div style="display:grid;grid-template-columns:34px 1fr 80px;gap:8px;padding:10px 12px;border-radius:10px;background:${bg};align-items:center;animation:fadeIn .3s ease;animation-delay:${i*0.05}s">
+            <span style="font-size:${i<3?"18":"12"}px;text-align:center">${medal||i+1}</span>
+            <div>
+              <span style="color:${i===0?"var(--gold)":i<3?"var(--wh)":"var(--tx)"};font-size:13px;font-weight:${i<3?700:500}">${name}</span>
+              <div class="score-bar"><div class="score-fill" style="width:${(data.score/5)*100}%;background:${scoreCol}"></div></div>
+            </div>
+            <span style="color:${scoreCol};font-family:'Syne',sans-serif;font-size:16px;font-weight:800;text-align:right">${data.score}/5</span>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>`:""}
+    
+    <div style="text-align:center;margin-top:12px">
+      <button class="btn btn-ghost" onclick="navigate('home')">← Back to Home</button>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INDIVIDUAL QUIZ — Randomized options + Reasons + Timer
+// ═══════════════════════════════════════════════════════════════
+let _indTimerInterval=null;
+
+function renderIndividualHome(area){
+  if(!STATE.admin.features.individualQuiz){area.innerHTML=`<div class="card" style="text-align:center"><p>Individual Quiz is disabled.</p><button class="btn btn-ghost" style="margin-top:12px" onclick="navigate('home')">← Home</button></div>`;return;}
+  const indCount=Object.keys(STATE.individuals).length;
+  const doneCount=Object.values(STATE.individuals).filter(i=>i.done).length;
+  
+  area.innerHTML=`
+    <div class="card fade-in" style="text-align:center">
+      <div style="font-size:40px;margin-bottom:6px">👤</div>
+      <h2 style="color:var(--wh);font-family:'Syne',sans-serif;font-size:22px;margin-bottom:4px">Individual MCQ Quiz</h2>
+      <p style="font-size:13px;color:var(--dim);margin-bottom:18px">5 random questions · Timed · Reasons explained · Personal score</p>
+      <div style="max-width:360px;margin:0 auto 16px">
+        <input id="ind-name-input" type="text" placeholder="Enter your full name..." maxlength="30" style="text-align:center"/>
+      </div>
+      <button class="btn btn-purple" onclick="startIndQuiz()" style="margin-bottom:16px">Start My Quiz →</button>
+      ${indCount>0?`
+      <div style="margin-top:8px;text-align:left">
+        <h4 style="color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Individual Leaderboard (${doneCount}/${indCount})</h4>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          ${Object.entries(STATE.individuals).filter(([n,d])=>d.done).sort((a,b)=>b[1].score-a[1].score).slice(0,15).map(([name,data],i)=>{
+            const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":"";
+            const scoreCol=data.score>=4?"var(--mint)":data.score>=3?"var(--sky)":"var(--coral)";
+            return`<div style="display:grid;grid-template-columns:28px 1fr 60px;gap:8px;padding:8px 10px;border-radius:8px;background:${i<3?"rgba(179,136,255,.06)":i%2===0?"rgba(255,255,255,.02)":"transparent"};align-items:center">
+              <span style="font-size:${i<3?"16":"12"}px;text-align:center">${medal||i+1}</span>
+              <span style="color:${i<3?"var(--wh)":"var(--tx)"};font-size:13px;font-weight:${i<3?700:500};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
+              <span style="color:${scoreCol};font-family:'Syne',sans-serif;font-size:15px;font-weight:800;text-align:right">${data.score}/5</span>
+            </div>`;
+          }).join("")}
+        </div>
+      </div>`:""}
+      <button class="btn btn-ghost" style="margin-top:14px" onclick="navigate('home')">← Back to Home</button>
+    </div>
+  `;
+}
+
+function startIndQuiz(){
+  const nameEl=$("ind-name-input");
+  if(!nameEl)return;
+  const name=nameEl.value.trim();
+  if(!name){toast("⚠️ Please enter your name","warning");return;}
+  if(STATE.individuals[name]&&STATE.individuals[name].done){
+    if(!confirm(`${name} already completed this quiz (${STATE.individuals[name].score}/5). Retake?`))return;
+  }
+  const pool=INDIVIDUAL_MCQ.map((q,i)=>i);
+  const picked=shuffle(pool).slice(0,5);
+  STATE.individuals[name]={
+    mcqIdxs:picked,
+    mcq:picked.map(idx=>{
+      const q=INDIVIDUAL_MCQ[idx];
+      const shuffleMap=shuffle([0,1,2,3]);
+      return{qIdx:idx,selected:null,correct:q.correct,shuffleMap,timedOut:false};
+    }),
+    done:false,score:0,currentIdx:0
+  };
+  STATE._indName=name;
+  STATE.currentView="ind-quiz";
+  save();render();
+}
+
+function renderIndQuiz(area){
+  const name=STATE._indName;
+  if(!name||!STATE.individuals[name]){navigate("individual");return;}
+  const ind=STATE.individuals[name];
+  const idx=ind.currentIdx||0;
+  if(idx>=5||ind.done){
+    ind.done=true;
+    ind.score=ind.mcq.filter(m=>m.selected===m.correct).length;
+    save();STATE.currentView="ind-result";render();return;
+  }
+  
+  const m=ind.mcq[idx];
+  const q=INDIVIDUAL_MCQ[m.qIdx];
+  const timerMax=STATE.admin.mcqTimer||30;
+  const answered=m.selected!==null||m.timedOut;
+  
+  area.innerHTML=`
+    <div class="card fade-in">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div>
+          <span class="badge tag-purple">👤 ${name}</span>
+          <span class="badge ${["tag-coral","tag-mint","tag-sky","tag-amber"][q.topic]}">${TOPICS[q.topic].split(":")[0]}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span id="ind-timer-display" style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--amber)">${timerMax}</span>
+          <span style="color:var(--dim);font-size:12px">${idx+1}/5</span>
+        </div>
+      </div>
+      
+      <div class="timer-bar">
+        <div id="ind-timer-fill" class="timer-fill" style="width:100%;background:linear-gradient(90deg,var(--purple),var(--pink))"></div>
+      </div>
+      
+      <div class="score-bar" style="margin-bottom:14px">
+        <div class="score-fill" style="width:${idx*20}%;background:var(--purple)"></div>
+      </div>
+      
+      <p style="color:var(--wh);font-size:15px;line-height:1.55;margin-bottom:16px;font-weight:500">${q.q}</p>
+      
+      ${m.shuffleMap.map((origIdx,di)=>{
+        let cls="mcq-option";
+        if(answered){
+          if(origIdx===q.correct)cls+=" correct";
+          else if(m.selected===origIdx&&origIdx!==q.correct)cls+=" wrong";
+        }
+        const letter=String.fromCharCode(65+di);
+        return`<button class="${cls}" ${answered?"disabled":""} onclick="indSelectMcq('${name}',${idx},${origIdx})">
+          <span class="opt-letter">${letter}</span>${q.opts[origIdx]}
+        </button>`;
+      }).join("")}
+      
+      ${answered?`
+        <div class="reason-box">
+          <strong>💡 ${m.timedOut?"Time's up! Correct answer: "+q.opts[q.correct]+"<br><br>Why:":"Why this is correct:"}</strong> ${q.reason}
+        </div>
+        <button class="btn btn-purple btn-full" style="margin-top:12px" onclick="indNextMcq('${name}')">${idx<4?"Next →":"See Results 🏁"}</button>
+      `:""}
+    </div>`;
+  
+  if(!answered){
+    if(_indTimerInterval)clearInterval(_indTimerInterval);
+    let remaining=timerMax;
+    _indTimerInterval=setInterval(()=>{
+      remaining--;
+      const fe=document.getElementById("ind-timer-fill");
+      const de=document.getElementById("ind-timer-display");
+      if(fe){
+        fe.style.width=(remaining/timerMax*100)+"%";
+        if(remaining<=5){fe.classList.add("urgent");fe.style.background="var(--coral)";}
+        else if(remaining<=timerMax*0.4){fe.style.background="linear-gradient(90deg,var(--amber),var(--coral))";}
+      }
+      if(de){de.textContent=remaining;if(remaining<=5)de.style.color="var(--coral)";}
+      if(remaining<=0){
+        clearInterval(_indTimerInterval);_indTimerInterval=null;
+        STATE.individuals[name].mcq[idx].timedOut=true;
+        save();render();
+        toast("⏰ Time's up!","warning",1800);
+      }
+    },1000);
+  } else {
+    if(_indTimerInterval){clearInterval(_indTimerInterval);_indTimerInterval=null;}
+  }
+}
+
+function indSelectMcq(name,qIdx,origOptIdx){
+  if(_indTimerInterval){clearInterval(_indTimerInterval);_indTimerInterval=null;}
+  STATE.individuals[name].mcq[qIdx].selected=origOptIdx;
+  const q=INDIVIDUAL_MCQ[STATE.individuals[name].mcq[qIdx].qIdx];
+  STATE.individuals[name].mcq[qIdx].correct=q.correct;
+  save();render();
+}
+
+function indNextMcq(name){
+  STATE.individuals[name].currentIdx=(STATE.individuals[name].currentIdx||0)+1;
+  if(STATE.individuals[name].currentIdx>=5){
+    STATE.individuals[name].done=true;
+    STATE.individuals[name].score=STATE.individuals[name].mcq.filter(m=>m.selected===m.correct).length;
+    confetti();
+  }
+  save();
+  if(STATE.individuals[name].done)STATE.currentView="ind-result";
+  render();
+}
+
+function renderIndResult(area){
+  const name=STATE._indName;
+  if(!name||!STATE.individuals[name]){navigate("individual");return;}
+  const ind=STATE.individuals[name];
+  const score=ind.score;
+  const emoji=score>=5?"🏆":score>=4?"🌟":score>=3?"💡":score>=2?"📚":"🔍";
+  const msg=score>=5?"Perfect score! Outstanding!":score>=4?"Excellent! Clear mastery.":score>=3?"Good work! Solid understanding.":score>=2?"Getting there! Review the materials.":"Keep learning! You'll get there.";
+  
+  const sorted=Object.entries(STATE.individuals).filter(([n,d])=>d.done).sort((a,b)=>b[1].score-a[1].score);
+  const rank=sorted.findIndex(([n])=>n===name)+1;
+  
+  area.innerHTML=`
+    <div class="card fade-in scale-in" style="text-align:center">
+      <div style="font-size:56px;margin-bottom:4px">${emoji}</div>
+      <h2 style="color:var(--wh);font-family:'Syne',sans-serif;font-size:22px;margin-bottom:2px">${name}</h2>
+      <div class="big-stat" style="color:var(--purple);margin:10px 0">${score}<span style="font-size:28px;color:var(--dim)">/5</span></div>
+      <p style="color:var(--sky);font-size:13px;margin-bottom:4px">Rank #${rank} of ${sorted.length} participant${sorted.length!==1?"s":""}</p>
+      
+      <div style="display:flex;gap:6px;justify-content:center;margin:12px 0">
+        ${ind.mcq.map(m=>`<div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;background:${m.selected===m.correct?"var(--mint)":"var(--coral)"};color:${m.selected===m.correct?"#000":"#fff"}">${m.selected===m.correct?"✓":"✗"}</div>`).join("")}
+      </div>
+      <p style="color:var(--tx);font-size:14px;margin-bottom:20px">${msg}</p>
+      
+      <div style="text-align:left;margin-bottom:16px">
+        ${ind.mcq.map((m,i)=>{
+          const q=INDIVIDUAL_MCQ[m.qIdx];
+          const correct2=m.selected===m.correct;
+          return`<div class="card2" style="margin-bottom:8px;border-left:3px solid ${correct2?"var(--mint)":"var(--coral)"}">
+            <p style="font-size:12px;color:var(--tx);margin-bottom:4px">${i+1}. ${q.q}</p>
+            <div style="font-size:11px;margin-bottom:5px">
+              <span style="color:${correct2?"var(--mint)":"var(--coral)"};font-weight:700">${correct2?"✓ Correct":"✗ Wrong"}</span>
+              ${m.timedOut?`<span style="color:var(--dim)"> — Timed out</span>`:""}
+              ${!correct2&&!m.timedOut?`<span style="color:var(--dim)"> — Your answer: ${q.opts[m.selected]}</span>`:""}
+              ${!correct2?`<span style="color:var(--dim)"> → Correct: <strong style="color:var(--mint)">${q.opts[q.correct]}</strong></span>`:""}
+            </div>
+            <div style="font-size:11px;color:var(--dim);line-height:1.5">💡 ${q.reason}</div>
+          </div>`;
+        }).join("")}
+      </div>
+      
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" style="flex:1" onclick="navigate('individual')">← Try Again</button>
+        <button class="btn btn-purple" style="flex:1" onclick="navigate('scoreboard')">🏆 Leaderboard</button>
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+// Auto-refresh scoreboard every 15 seconds when on that view
+setInterval(()=>{
+  if(STATE.currentView==="scoreboard")render();
+},15000);
+
+render();
+</script>
+</body>
+</html>
